@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- SUPABASE JS SDK (LOAD FIRST) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .modal { transition: all 0.3s ease; }
@@ -124,36 +123,51 @@
 
 <script>
     // ==================== KONFIGURASI ====================
-    const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";  // GANTI
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";  // GANTI
+    // 🔴 WAJIB GANTI DENGAN DATA SUPABASE ANDA 🔴
+    const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";  // GANTI!
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";  // GANTI!
     const ADMIN_PASSWORD = "admin123";
+    // ===================================================
     
     let supabaseClient = null;
     
-    // Inisialisasi Supabase setelah window load
-    window.addEventListener('load', function() {
-        if (window.supabase) {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase ready');
-        } else {
-            console.error('Supabase JS not loaded');
+    // Cek koneksi Supabase
+    async function testSupabaseConnection() {
+        if (!SUPABASE_URL || SUPABASE_URL === "https://xxxxxxxxxxxx.supabase.co") {
+            Swal.fire('Error Konfigurasi', 'SUPABASE_URL belum diisi! Silakan edit file admin.html', 'error');
+            return false;
         }
-    });
-    
-    function getSupabase() {
-        if (!supabaseClient && window.supabase) {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")) {
+            Swal.fire('Error Konfigurasi', 'SUPABASE_ANON_KEY belum diisi! Silakan edit file admin.html', 'error');
+            return false;
         }
-        return supabaseClient;
+        
+        try {
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // Test query sederhana
+            const { error } = await supabase.from('produk').select('count', { count: 'exact', head: true });
+            if (error && error.message.includes('relation')) {
+                Swal.fire('Error Tabel', 'Tabel "produk" belum ada di Supabase! Buat tabel terlebih dahulu.', 'error');
+                return false;
+            }
+            supabaseClient = supabase;
+            return true;
+        } catch (error) {
+            Swal.fire('Koneksi Gagal', 'Tidak bisa terhubung ke Supabase. Periksa URL dan ANON KEY.\n\nError: ' + error.message, 'error');
+            return false;
+        }
     }
-    // ===================================================
     
-    function checkPassword() {
+    async function checkPassword() {
         const password = document.getElementById('passwordInput').value;
         if (password === ADMIN_PASSWORD) {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminDashboard').style.display = 'block';
-            loadProducts();
+            // Test koneksi Supabase sebelum masuk
+            const connected = await testSupabaseConnection();
+            if (connected) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadProducts();
+            }
         } else {
             Swal.fire('Error', 'Password salah!', 'error');
         }
@@ -162,24 +176,33 @@
     function logout() {
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('adminDashboard').style.display = 'none';
+        document.getElementById('passwordInput').value = '';
+    }
+    
+    function getSupabase() {
+        if (!supabaseClient) {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+        return supabaseClient;
     }
     
     async function loadProducts() {
         const container = document.getElementById('productsContainer');
-        container.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-2xl"></i> Memuat...</div>';
+        container.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-2xl"></i> Memuat produk...</div>';
         
         const supabase = getSupabase();
-        if (!supabase) {
-            container.innerHTML = '<div class="text-center py-10 text-red-500">Supabase tidak terinisialisasi. Periksa koneksi.</div>';
-            return;
-        }
         
         try {
             const { data, error } = await supabase.from('produk').select('*').order('created_at', { ascending: false });
-            if (error) throw error;
+            
+            if (error) {
+                console.error('Supabase error:', error);
+                container.innerHTML = `<div class="text-center py-10 text-red-500">Error: ${error.message}<br><br>${error.hint ? 'Hint: ' + error.hint : ''}</div>`;
+                return;
+            }
             
             if (!data || data.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-gray-500">Belum ada produk. Klik "Tambah" untuk menambahkan.</div>';
+                container.innerHTML = '<div class="text-center py-10 text-gray-500">📦 Belum ada produk. Klik "Tambah Produk" untuk menambahkan.</div>';
                 return;
             }
             
@@ -188,12 +211,20 @@
                     <div class="table-wrapper">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
-                                <tr><th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Gambar</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Nama</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Kategori</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Harga</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Aksi</th></tr>
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Gambar</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Nama</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Kategori</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Harga</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Aksi</th>
+                                </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                                 ${data.map(product => `
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-4 py-3">${product.gambar_url ? `<img src="${product.gambar_url}" class="h-10 w-10 object-cover rounded">` : '<i class="fas fa-image text-gray-400"></i>'}</td>
+                                        <td class="px-4 py-3">
+                                            ${product.gambar_url ? `<img src="${product.gambar_url}" class="h-10 w-10 object-cover rounded">` : '<i class="fas fa-image text-gray-400"></i>'}
+                                         </td>
                                         <td class="px-4 py-3 font-medium">${escapeHtml(product.nama)}</td>
                                         <td class="px-4 py-3">${escapeHtml(product.kategori) || '-'}</td>
                                         <td class="px-4 py-3">Rp ${product.harga.toLocaleString('id-ID')}</td>
@@ -209,8 +240,8 @@
                 </div>
             `;
         } catch (error) {
-            container.innerHTML = `<div class="text-center py-10 text-red-500">Error: ${error.message}</div>`;
-            Swal.fire('Error', error.message, 'error');
+            console.error('Load error:', error);
+            container.innerHTML = `<div class="text-center py-10 text-red-500">❌ Gagal memuat produk: ${error.message}</div>`;
         }
     }
     
@@ -219,6 +250,12 @@
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         const filePath = `produk-images/${fileName}`;
+        
+        // Cek apakah bucket ada
+        const { error: bucketError } = await supabase.storage.getBucket('produk-images');
+        if (bucketError) {
+            throw new Error('Bucket "produk-images" tidak ditemukan. Buat bucket terlebih dahulu di Supabase Storage.');
+        }
         
         const { error } = await supabase.storage.from('produk-images').upload(filePath, file);
         if (error) throw error;
@@ -239,8 +276,10 @@
         
         try {
             let gambarUrl = document.getElementById('currentImagePreview').src;
-            if (gambarFile && gambarFile !== '') {
+            if (gambarFile) {
+                const uploading = await Swal.fire({ title: 'Uploading...', text: 'Mengupload gambar...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
                 gambarUrl = await uploadImage(gambarFile);
+                Swal.close();
             }
             
             const productData = { nama, kategori, harga, deskripsi, gambar_url: gambarUrl || null };
@@ -254,10 +293,11 @@
             
             if (result.error) throw result.error;
             
-            Swal.fire('Sukses', id ? 'Produk diupdate!' : 'Produk ditambahkan!', 'success');
+            Swal.fire('Sukses', id ? 'Produk berhasil diupdate!' : 'Produk berhasil ditambahkan!', 'success');
             closeModal();
             loadProducts();
         } catch (error) {
+            console.error('Save error:', error);
             Swal.fire('Error', error.message, 'error');
         }
     });
