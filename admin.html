@@ -7,36 +7,50 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        .tab-active {
-            background-color: #C5A028;  /* Warna emas */
-            color: white;
-        }
-        .modal { transition: all 0.3s ease; }
-        .table-wrapper { overflow-x: auto; }
-        .btn-emas {
-            background-color: #C5A028;
-            color: white;
-        }
-        .btn-emas:hover {
-            background-color: #A8861E;
-        }
-        .text-emas {
-            color: #C5A028;
-        }
-        .border-emas {
-            border-color: #C5A028;
-        }
-        .bg-hijau-tua {
-            background-color: #2D5A27;
-        }
-        .bg-hijau-muda {
-            background-color: #4A7C3F;
-        }
-        .hover\\:bg-hijau-tua:hover {
-            background-color: #2D5A27;
-        }
-    </style>
+   <style>
+    .tab-active {
+        background-color: #1E4FA3;  /* biru utama */
+        color: white;
+    }
+    .modal { transition: all 0.3s ease; }
+    .table-wrapper { overflow-x: auto; }
+
+    .btn-primary {
+        background-color: #1E4FA3;
+        color: white;
+    }
+    .btn-primary:hover {
+        background-color: #1C3F91;
+    }
+
+    .text-primary {
+        color: #1E4FA3;
+    }
+
+    .border-primary {
+        border-color: #1E4FA3;
+    }
+
+    .bg-primary {
+        background-color: #1E4FA3;
+    }
+
+    .bg-secondary {
+        background-color: #3A73C5;
+    }
+
+    .bg-light-blue {
+        background-color: #6FA3E6;
+    }
+
+    .bg-soft {
+        background-color: #E6E6E6;
+    }
+
+    .hover\:bg-primary:hover {
+        background-color: #1E4FA3;
+    }
+</style>
 </head>
 <body class="bg-gray-100">
 
@@ -61,7 +75,7 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap gap-2">
             <div class="flex items-center space-x-2">
                 <i class="fas fa-hospital-user text-2xl" style="color: #C5A028;"></i>
-                <span class="text-xl font-bold" style="color: #2D5A27;">MediStore Admin</span>
+                <span class="text-xl font-bold" style="color: #2D5A27;">PSF Alkes Admin</span>
             </div>
             <button onclick="logout()" class="px-4 py-2 rounded-lg text-sm transition" style="background-color: #C5A028; color: white;">
                 <i class="fas fa-sign-out-alt"></i> Logout

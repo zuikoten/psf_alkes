@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Produk - MediStore</title>
+    <title>Katalog Produk - PSF Alkes</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -27,7 +27,7 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
             <div class="flex items-center space-x-2">
                 <i class="fas fa-hospital-user text-teal-600 text-2xl"></i>
-                <span class="text-2xl font-bold text-teal-700">MediStore</span>
+                <span class="text-2xl font-bold text-teal-700">PSF Alkes</span>
             </div>
             <div class="flex space-x-4">
                 <a href="index.html" class="text-gray-600 hover:text-teal-600">Beranda</a>
@@ -83,7 +83,7 @@
 
     <footer class="bg-gray-800 text-white py-6 mt-12">
         <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2025 MediStore - Toko Alat Kesehatan</p>
+            <p>&copy; 2025 PSF Alkes - Toko Alat Kesehatan</p>
         </div>
     </footer>
 
@@ -200,7 +200,7 @@
         
         window.orderViaWhatsApp = function(namaProduk, harga) {
             const phoneNumber = "6281234567890"; // GANTI DENGAN NOMOR WHATSAPP ANDA
-            const message = `Halo MediStore,%0A%0ASaya ingin memesan produk berikut:%0A*${namaProduk}*%0AHarga: Rp ${harga.toLocaleString('id-ID')}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
+            const message = `Halo PSF Alkes,%0A%0ASaya ingin memesan produk berikut:%0A*${namaProduk}*%0AHarga: Rp ${harga.toLocaleString('id-ID')}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
         };
         
