@@ -6,6 +6,6 @@
     "@supabase/supabase-js": "^2.39.0"
   },
   "keywords": ["medistore", "netlify", "supabase"],
-  "author": "Your Name",
-  "license": "MIT"
+  "author": "ian jeki",
+  "license": "arrahman islamic center"
 }

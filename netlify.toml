@@ -1,27 +1,12 @@
 [build]
-  # Folder tempat Netlify Functions berada
   functions = "netlify/functions"
-  
-  # Folder root untuk file HTML
   publish = "."
+  command = "npm install"
 
 [functions]
-  # Package manager untuk functions
   node_bundler = "esbuild"
-  
-  # Environment untuk functions
-  [functions."*"]
-    # Timeout untuk function (default 10 detik)
-    timeout = 10
 
-# Redirect untuk API endpoint
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
-  status = 200
-
-# Redirect untuk halaman 404 (opsional)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
   status = 200
