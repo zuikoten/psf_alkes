@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "Toko Online Alat Kesehatan dengan Netlify Functions",
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.107.0"
   },
-  "keywords": ["medistore", "netlify", "supabase"],
+  "keywords": [
+    "medistore",
+    "netlify",
+    "supabase"
+  ],
   "author": "ian jeki",
   "license": "arrahman islamic center"
 }
