@@ -91,6 +91,28 @@
         let allProducts = [];
         let uniqueCategories = new Set();
 
+        // Load categories dari function terpisah
+        async function loadCategories() {
+            try {
+                const response = await fetch('/.netlify/functions/get-categories');
+                const { categories, error } = await response.json();
+                    
+                if (error) throw new Error(error);
+                
+                const categorySelect = document.getElementById('categoryFilter');
+                categorySelect.innerHTML = '<option value="all">Semua Kategori</option>';
+                
+                if (categories && categories.length > 0) {
+                    categories.forEach(cat => {
+                        categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+        
         async function loadAllProducts() {
             try {
                 const response = await fetch('/.netlify/functions/get-products');
@@ -99,20 +121,6 @@
                 if (error) throw new Error(error);
                 
                 allProducts = data || [];
-                
-                uniqueCategories.clear();
-                allProducts.forEach(product => {
-                    if (product.kategori && product.kategori.trim() !== '') {
-                        uniqueCategories.add(product.kategori);
-                    }
-                });
-                
-                const categorySelect = document.getElementById('categoryFilter');
-                categorySelect.innerHTML = '<option value="all">Semua Kategori</option>';
-                Array.from(uniqueCategories).sort().forEach(cat => {
-                    categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
-                });
-                
                 filterAndRenderProducts();
                 
             } catch (error) {
@@ -121,6 +129,7 @@
                     <div class="col-span-full text-center text-red-500 py-10">
                         <i class="fas fa-exclamation-circle text-4xl"></i>
                         <p class="mt-2">Gagal memuat produk. Pastikan Netlify Functions sudah terdeploy.</p>
+                        <p class="text-sm mt-2">Error: ${error.message}</p>
                     </div>
                 `;
             }
@@ -163,12 +172,12 @@
                     </div>
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-lg text-gray-800 line-clamp-1">${product.nama}</h3>
-                            ${product.kategori ? `<span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">${product.kategori}</span>` : ''}
+                            <h3 class="font-bold text-lg text-gray-800 line-clamp-1">${escapeHtml(product.nama)}</h3>
+                            ${product.kategori ? `<span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">${escapeHtml(product.kategori)}</span>` : ''}
                         </div>
                         <p class="text-teal-600 font-bold text-xl mt-2">Rp ${product.harga.toLocaleString('id-ID')}</p>
-                        <p class="text-sm text-gray-500 mt-1 line-clamp-2">${product.deskripsi || 'Alat kesehatan medis standar'}</p>
-                        <button onclick="orderViaWhatsApp('${product.nama.replace(/'/g, "\\'")}', ${product.harga})" 
+                        <p class="text-sm text-gray-500 mt-1 line-clamp-2">${escapeHtml(product.deskripsi || 'Alat kesehatan medis standar')}</p>
+                        <button onclick='orderViaWhatsApp("${escapeHtml(product.nama).replace(/'/g, "\\'")}", ${product.harga})' 
                                 class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg flex items-center justify-center space-x-2 transition">
                             <i class="fab fa-whatsapp"></i>
                             <span>Beli via WhatsApp</span>
@@ -178,12 +187,24 @@
             `).join('');
         }
         
+        // Fungsi untuk mencegah XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
         window.orderViaWhatsApp = function(namaProduk, harga) {
-            const phoneNumber = "6281234567890";
+            const phoneNumber = "6281234567890"; // GANTI DENGAN NOMOR WHATSAPP ANDA
             const message = `Halo MediStore,%0A%0ASaya ingin memesan produk berikut:%0A*${namaProduk}*%0AHarga: Rp ${harga.toLocaleString('id-ID')}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
         };
         
+        // Event listeners
         document.getElementById('searchInput').addEventListener('input', filterAndRenderProducts);
         document.getElementById('categoryFilter').addEventListener('change', filterAndRenderProducts);
         document.getElementById('resetFilter').addEventListener('click', () => {
@@ -192,7 +213,11 @@
             filterAndRenderProducts();
         });
         
-        document.addEventListener('DOMContentLoaded', loadAllProducts);
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadCategories();
+            await loadAllProducts();
+        });
     </script>
 </body>
 </html>
