@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - MediStore</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .modal {
+            transition: all 0.3s ease;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<!-- ==================== KONFIGURASI SUPABASE ==================== -->
+<!-- ISI DENGAN DATA SUPABASE ANDA -->
+<script>
+    const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";  // GANTI DENGAN URL SUPABASE ANDA
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";  // GANTI DENGAN ANON KEY ANDA
+    
+    // PASSWORD ADMIN (hardcoded sementara)
+    const ADMIN_PASSWORD = "admin123";
+    
+    // Inisialisasi Supabase client
+    const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
+<!-- ============================================================ -->
+
+<!-- Login Screen -->
+<div id="loginScreen" class="min-h-screen flex items-center justify-center bg-gradient-to-r from-teal-500 to-blue-600">
+    <div class="bg-white rounded-lg shadow-xl p-8 w-96">
+        <div class="text-center mb-6">
+            <i class="fas fa-lock text-4xl text-teal-600"></i>
+            <h2 class="text-2xl font-bold mt-2">Admin Login</h2>
+            <p class="text-gray-500 text-sm">Masukkan password untuk mengakses dashboard</p>
+        </div>
+        <input type="password" id="passwordInput" placeholder="Password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500 mb-4">
+        <button onclick="checkPassword()" class="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+    </div>
+</div>
+
+<!-- Main Admin Dashboard (Hidden awal) -->
+<div id="adminDashboard" style="display: none;">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-hospital-user text-teal-600 text-2xl"></i>
+                <span class="text-xl font-bold text-teal-700">MediStore Admin</span>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="showProducts()" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">
+                    <i class="fas fa-boxes"></i> All Produk
+                </button>
+                <button onclick="showAddModal()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    <i class="fas fa-plus"></i> Tambah Produk
+                </button>
+                <button onclick="logout()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div id="productsContainer">
+            <!-- Products table akan dimuat di sini -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tambah/Edit Produk -->
+<div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-screen overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modalTitle" class="text-2xl font-bold">Tambah Produk</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Nama Produk *</label>
+                    <input type="text" id="nama" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Kategori *</label>
+                    <select id="kategori" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500">
+                        <option value="">Pilih Kategori</option>
+                        <option value="Alat Ukur">Alat Ukur</option>
+                        <option value="APD">APD</option>
+                        <option value="Diagnostik">Diagnostik</option>
+                        <option value="Perawatan">Perawatan</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Harga (Rp) *</label>
+                    <input type="number" id="harga" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
+                    <textarea id="deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2">Gambar Produk</label>
+                    <input type="file" id="gambar" accept="image/*" class="w-full px-4 py-2 border rounded-lg">
+                    <div id="currentImage" class="mt-2 hidden">
+                        <p class="text-sm text-gray-600">Gambar saat ini:</p>
+                        <img id="currentImagePreview" src="" class="h-20 w-20 object-cover rounded mt-1">
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                    <button type="button" onclick="closeModal()" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    let currentEditId = null;
+
+    // Cek password login
+    function checkPassword() {
+        const password = document.getElementById('passwordInput').value;
+        if (password === ADMIN_PASSWORD) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadProducts();
+        } else {
+            Swal.fire('Error', 'Password salah!', 'error');
+        }
+    }
+
+    function logout() {
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('adminDashboard').style.display = 'none';
+        document.getElementById('passwordInput').value = '';
+    }
+
+    // Load semua produk
+    async function loadProducts() {
+        showLoading();
+        try {
+            const { data, error } = await supabaseClient
+                .from('produk')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            
+            renderProductsTable(data);
+        } catch (error) {
+            Swal.fire('Error', 'Gagal memuat produk: ' + error.message, 'error');
+        }
+        hideLoading();
+    }
+
+    // Render tabel produk
+    function renderProductsTable(products) {
+        const container = document.getElementById('productsContainer');
+        if (!products || products.length === 0) {
+            container.innerHTML = '<div class="text-center py-10 text-gray-500">Belum ada produk. Klik "Tambah Produk" untuk menambahkan.</div>';
+            return;
+        }
+        
+        container.innerHTML = `
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="table-wrapper">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Gambar</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Harga</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            ${products.map(product => `
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4">
+                                        ${product.gambar_url ? 
+                                            `<img src="${product.gambar_url}" class="h-12 w-12 object-cover rounded">` : 
+                                            `<i class="fas fa-image text-2xl text-gray-400"></i>`
+                                        }
+                                    </td>
+                                    <td class="px-6 py-4 font-medium">${escapeHtml(product.nama)}</td>
+                                    <td class="px-6 py-4">${escapeHtml(product.kategori) || '-'}</td>
+                                    <td class="px-6 py-4">Rp ${product.harga.toLocaleString('id-ID')}</td>
+                                    <td class="px-6 py-4">
+                                        <button onclick="editProduct(${product.id})" class="text-blue-600 hover:text-blue-800 mr-3">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button onclick="deleteProduct(${product.id})" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // Upload gambar ke Supabase Storage
+    async function uploadImage(file) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = `produk-images/${fileName}`;
+        
+        const { data, error } = await supabaseClient.storage
+            .from('produk-images')
+            .upload(filePath, file);
+            
+        if (error) throw error;
+        
+        // Dapatkan public URL
+        const { data: { publicUrl } } = supabaseClient.storage
+            .from('produk-images')
+            .getPublicUrl(filePath);
+            
+        return publicUrl;
+    }
+
+    // Simpan produk (tambah/edit)
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const id = document.getElementById('productId').value;
+        const nama = document.getElementById('nama').value;
+        const kategori = document.getElementById('kategori').value;
+        const harga = parseInt(document.getElementById('harga').value);
+        const deskripsi = document.getElementById('deskripsi').value;
+        const gambarFile = document.getElementById('gambar').files[0];
+        
+        showLoading();
+        
+        try {
+            let gambarUrl = document.getElementById('currentImagePreview').src;
+            
+            // Upload gambar baru jika ada
+            if (gambarFile) {
+                gambarUrl = await uploadImage(gambarFile);
+            }
+            
+            const productData = {
+                nama,
+                kategori,
+                harga,
+                deskripsi,
+                gambar_url: gambarUrl || null
+            };
+            
+            let result;
+            if (id) {
+                // Update produk
+                result = await supabaseClient
+                    .from('produk')
+                    .update(productData)
+                    .eq('id', parseInt(id));
+            } else {
+                // Insert produk baru
+                result = await supabaseClient
+                    .from('produk')
+                    .insert([productData]);
+            }
+            
+            if (result.error) throw result.error;
+            
+            Swal.fire('Sukses', id ? 'Produk berhasil diupdate!' : 'Produk berhasil ditambahkan!', 'success');
+            closeModal();
+            loadProducts();
+        } catch (error) {
+            Swal.fire('Error', 'Gagal menyimpan produk: ' + error.message, 'error');
+        }
+        hideLoading();
+    });
+
+    // Edit produk
+    async function editProduct(id) {
+        showLoading();
+        try {
+            const { data, error } = await supabaseClient
+                .from('produk')
+                .select('*')
+                .eq('id', id)
+                .single();
+                
+            if (error) throw error;
+            
+            currentEditId = id;
+            document.getElementById('productId').value = data.id;
+            document.getElementById('nama').value = data.nama;
+            document.getElementById('kategori').value = data.kategori || '';
+            document.getElementById('harga').value = data.harga;
+            document.getElementById('deskripsi').value = data.deskripsi || '';
+            
+            if (data.gambar_url) {
+                document.getElementById('currentImagePreview').src = data.gambar_url;
+                document.getElementById('currentImage').classList.remove('hidden');
+            } else {
+                document.getElementById('currentImage').classList.add('hidden');
+            }
+            
+            document.getElementById('modalTitle').innerText = 'Edit Produk';
+            document.getElementById('productModal').classList.remove('hidden');
+            document.getElementById('productModal').classList.add('flex');
+            
+        } catch (error) {
+            Swal.fire('Error', 'Gagal memuat data produk: ' + error.message, 'error');
+        }
+        hideLoading();
+    }
+
+    // Hapus produk
+    async function deleteProduct(id) {
+        const confirm = await Swal.fire({
+            title: 'Yakin hapus?',
+            text: "Produk akan dihapus permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        });
+        
+        if (confirm.isConfirmed) {
+            showLoading();
+            try {
+                const { error } = await supabaseClient
+                    .from('produk')
+                    .delete()
+                    .eq('id', id);
+                    
+                if (error) throw error;
+                
+                Swal.fire('Terhapus!', 'Produk berhasil dihapus.', 'success');
+                loadProducts();
+            } catch (error) {
+                Swal.fire('Error', 'Gagal hapus produk: ' + error.message, 'error');
+            }
+            hideLoading();
+        }
+    }
+
+    // Show add modal
+    function showAddModal() {
+        currentEditId = null;
+        document.getElementById('productForm').reset();
+        document.getElementById('productId').value = '';
+        document.getElementById('currentImage').classList.add('hidden');
+        document.getElementById('modalTitle').innerText = 'Tambah Produk';
+        document.getElementById('productModal').classList.remove('hidden');
+        document.getElementById('productModal').classList.add('flex');
+    }
+
+    // Show products (refresh)
+    function showProducts() {
+        loadProducts();
+    }
+
+    // Close modal
+    function closeModal() {
+        document.getElementById('productModal').classList.add('hidden');
+        document.getElementById('productModal').classList.remove('flex');
+        document.getElementById('productForm').reset();
+    }
+
+    // Loading overlay
+    function showLoading() {
+        if (!document.getElementById('loadingOverlay')) {
+            const overlay = document.createElement('div');
+            overlay.id = 'loadingOverlay';
+            overlay.className = 'loading-overlay';
+            overlay.innerHTML = '<div class="bg-white p-4 rounded-lg"><i class="fas fa-spinner fa-spin text-3xl text-teal-600"></i><p class="mt-2">Memproses...</p></div>';
+            document.body.appendChild(overlay);
+        } else {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+    }
+    
+    function hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) overlay.style.display = 'none';
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+</script>
+</body>
+</html>
