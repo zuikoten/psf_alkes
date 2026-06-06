@@ -1,166 +1,217 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tentang Kami - PSF Alkes</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <style>
-        :root {
-            --color-primary:        #1565C0;
-            --color-primary-dark:   #0D47A1;
-            --color-secondary:      #4A9FE8;
-            --color-light:          #90CAF9;
-            --color-soft:           #E3F2FD;
-            --color-text-primary:   #1565C0;
-            --color-text-muted:     #6B7280;
-            --color-bg-page:        #F5F9FF;
-            --color-white:          #FFFFFF;
-        }
+      :root {
+        --color-primary: #1565c0;
+        --color-primary-dark: #0d47a1;
+        --color-secondary: #4a9fe8;
+        --color-light: #90caf9;
+        --color-soft: #e3f2fd;
+        --color-text-primary: #1565c0;
+        --color-text-muted: #6b7280;
+        --color-bg-page: #f5f9ff;
+        --color-white: #ffffff;
+      }
 
-        body                { background-color: var(--color-bg-page); }
-        .text-primary       { color: var(--color-text-primary); }
-        .text-muted         { color: var(--color-text-muted); }
-        .bg-soft            { background-color: var(--color-soft); }
+      body {
+        background-color: var(--color-bg-page);
+      }
+      .text-primary {
+        color: var(--color-text-primary);
+      }
+      .text-muted {
+        color: var(--color-text-muted);
+      }
+      .bg-soft {
+        background-color: var(--color-soft);
+      }
 
-        .hero-bg {
-            background: linear-gradient(160deg, var(--color-primary) 0%, var(--color-secondary) 60%, var(--color-light) 100%);
-        }
+      .hero-bg {
+        background: linear-gradient(
+          160deg,
+          var(--color-primary) 0%,
+          var(--color-secondary) 60%,
+          var(--color-light) 100%
+        );
+      }
 
-        .card {
-            background: var(--color-white);
-            border: 1px solid var(--color-soft);
-            border-radius: 12px;
-        }
+      .card {
+        background: var(--color-white);
+        border: 1px solid var(--color-soft);
+        border-radius: 12px;
+      }
 
-        .icon-box {
-            width: 52px;
-            height: 52px;
-            background: var(--color-soft);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-primary);
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
+      .icon-box {
+        width: 52px;
+        height: 52px;
+        background: var(--color-soft);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-primary);
+        font-size: 1.25rem;
+        flex-shrink: 0;
+      }
 
-        .legal-badge {
-            background: var(--color-soft);
-            border: 1px solid var(--color-light);
-            border-radius: 10px;
-            color: var(--color-primary);
-        }
+      .legal-badge {
+        background: var(--color-soft);
+        border: 1px solid var(--color-light);
+        border-radius: 10px;
+        color: var(--color-primary);
+      }
 
-        .footer                 { background-color: var(--color-primary-dark, #0D47A1); }
-        .footer-sub             { color: var(--color-light); }
+      .footer {
+        background-color: var(--color-primary-dark, #0d47a1);
+      }
+      .footer-sub {
+        color: var(--color-light);
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div id="navbar"></div>
     <script src="/navbar.js"></script>
 
     <!-- Hero -->
     <section class="hero-bg py-16">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl font-bold text-white mb-3">Tentang Kami</h1>
-            <p class="text-lg" style="color: rgba(255,255,255,0.85);">Mengenal lebih dekat PSF Alkes</p>
-        </div>
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl font-bold text-white mb-3">Tentang Kami</h1>
+        <p class="text-lg" style="color: rgba(255, 255, 255, 0.85)">
+          Mengenal lebih dekat PSF Alkes
+        </p>
+      </div>
     </section>
 
     <div class="container mx-auto px-4 py-12 max-w-4xl">
-
-        <!-- Profil Usaha -->
-        <div class="card p-8 mb-6 shadow-sm">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="icon-box"><i class="fas fa-store"></i></div>
-                <h2 class="text-xl font-bold text-primary">Profil Usaha</h2>
-            </div>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                <!-- GANTI: deskripsi singkat usaha PSF Alkes -->
-                PSF Alkes adalah unit usaha alat kesehatan yang berkomitmen menyediakan produk medis berkualitas untuk rumah sakit, klinik, dan kebutuhan pribadi. Kami hadir untuk memastikan akses terhadap alat kesehatan yang terpercaya dan terjangkau.
-            </p>
-            <p class="text-gray-700 leading-relaxed">
-                <!-- GANTI: sejarah atau info tambahan usaha -->
-                Berdiri sebagai bagian dari Pangestu Suryaning Famili, kami terus berkembang dalam melayani kebutuhan medis masyarakat dengan standar kualitas tertinggi.
-            </p>
+      <!-- Profil Usaha -->
+      <div class="card p-8 mb-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="icon-box"><i class="fas fa-store"></i></div>
+          <h2 class="text-xl font-bold text-primary">Profil Usaha</h2>
         </div>
+        <p class="text-gray-700 leading-relaxed mb-4">
+          <!-- GANTI: deskripsi singkat usaha PSF Alkes -->
+          PSF Alkes adalah unit usaha alat kesehatan yang berkomitmen
+          menyediakan produk medis berkualitas untuk rumah sakit, klinik, dan
+          kebutuhan pribadi. Kami hadir untuk memastikan akses terhadap alat
+          kesehatan yang terpercaya dan terjangkau.
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+          <!-- GANTI: sejarah atau info tambahan usaha -->
+          Berdiri sebagai bagian dari PT Pangestu Suryaning Famili dan juga di
+          dalam Group PT.Hatamed Industri Utama yang memiliki izin dari
+          Kementerian Kesehatan Indonesia, kami terus berkembang dalam melayani
+          kebutuhan medis masyarakat dengan standar kualitas tertinggi.
+        </p>
+      </div>
 
-        <!-- Legalitas -->
-        <div class="card p-8 mb-6 shadow-sm">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="icon-box"><i class="fas fa-certificate"></i></div>
-                <h2 class="text-xl font-bold text-primary">Legalitas & Perizinan</h2>
-            </div>
-            <div class="legal-badge p-5 mb-4">
-                <p class="text-sm text-muted mb-1">Bagian dari</p>
-                <p class="font-bold text-lg">Group of PT. Hatamed Industri Utama</p>
-            </div>
-            <div class="legal-badge p-5">
-                <p class="text-sm text-muted mb-1">Izin Kementerian Kesehatan RI</p>
-                <p class="font-bold text-lg tracking-wide">AKD 21603129105</p>
-            </div>
+      <!-- Legalitas -->
+      <div class="card p-8 mb-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="icon-box"><i class="fas fa-certificate"></i></div>
+          <h2 class="text-xl font-bold text-primary">Legalitas & Perizinan</h2>
         </div>
-
-        <!-- Visi & Misi -->
-        <div class="card p-8 mb-6 shadow-sm">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="icon-box"><i class="fas fa-bullseye"></i></div>
-                <h2 class="text-xl font-bold text-primary">Visi & Misi</h2>
-            </div>
-            <div class="mb-5">
-                <p class="font-semibold text-gray-800 mb-2">Visi</p>
-                <p class="text-gray-700 leading-relaxed">
-                    <!-- GANTI: visi usaha -->
-                    Menjadi penyedia alat kesehatan terpercaya yang berkontribusi pada peningkatan kualitas layanan kesehatan masyarakat Indonesia.
-                </p>
-            </div>
-            <div>
-                <p class="font-semibold text-gray-800 mb-2">Misi</p>
-                <ul class="space-y-2 text-gray-700">
-                    <!-- GANTI: poin-poin misi -->
-                    <li class="flex items-start gap-2"><i class="fas fa-check text-primary mt-1 text-sm"></i> Menyediakan produk alat kesehatan berstandar dan berlisensi resmi</li>
-                    <li class="flex items-start gap-2"><i class="fas fa-check text-primary mt-1 text-sm"></i> Memberikan pelayanan yang cepat, ramah, dan profesional</li>
-                    <li class="flex items-start gap-2"><i class="fas fa-check text-primary mt-1 text-sm"></i> Memastikan harga yang kompetitif dan terjangkau</li>
-                </ul>
-            </div>
+        <div class="legal-badge p-5 mb-4">
+          <p class="text-sm text-muted mb-1">Bagian dari</p>
+          <p class="font-bold text-lg">Group of PT. Hatamed Industri Utama</p>
         </div>
-
-        <!-- Keunggulan -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            <div class="card p-6 shadow-sm text-center">
-                <div class="icon-box mx-auto mb-3"><i class="fas fa-shield-alt"></i></div>
-                <p class="font-bold text-gray-800 mb-1">Produk Berlisensi</p>
-                <p class="text-sm text-muted">Semua produk berizin resmi Kemenkes RI</p>
-            </div>
-            <div class="card p-6 shadow-sm text-center">
-                <div class="icon-box mx-auto mb-3"><i class="fas fa-truck"></i></div>
-                <p class="font-bold text-gray-800 mb-1">Pengiriman Cepat</p>
-                <!-- GANTI: info pengiriman -->
-                <p class="text-sm text-muted">Siap kirim ke seluruh wilayah</p>
-            </div>
-            <div class="card p-6 shadow-sm text-center">
-                <div class="icon-box mx-auto mb-3"><i class="fab fa-whatsapp"></i></div>
-                <p class="font-bold text-gray-800 mb-1">Konsultasi Gratis</p>
-                <p class="text-sm text-muted">Tanya produk langsung via WhatsApp</p>
-            </div>
+        <div class="legal-badge p-5">
+          <p class="text-sm text-muted mb-1">Izin Kementerian Kesehatan RI</p>
+          <p class="font-bold text-lg tracking-wide">AKD 21603129105</p>
         </div>
+      </div>
 
+      <!-- Visi & Misi -->
+      <div class="card p-8 mb-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="icon-box"><i class="fas fa-bullseye"></i></div>
+          <h2 class="text-xl font-bold text-primary">Visi & Misi</h2>
+        </div>
+        <div class="mb-5">
+          <p class="font-semibold text-gray-800 mb-2">Visi</p>
+          <p class="text-gray-700 leading-relaxed">
+            <!-- GANTI: visi usaha -->
+            Menjadi penyedia alat kesehatan terpercaya yang berkontribusi pada
+            peningkatan kualitas layanan kesehatan masyarakat Indonesia.
+          </p>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-800 mb-2">Misi</p>
+          <ul class="space-y-2 text-gray-700">
+            <!-- GANTI: poin-poin misi -->
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check text-primary mt-1 text-sm"></i> Menyediakan
+              produk alat kesehatan berstandar dan berlisensi resmi
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check text-primary mt-1 text-sm"></i> Memberikan
+              pelayanan yang cepat, ramah, dan profesional
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fas fa-check text-primary mt-1 text-sm"></i> Memastikan
+              harga yang kompetitif dan terjangkau
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Keunggulan -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div class="card p-6 shadow-sm text-center">
+          <div class="icon-box mx-auto mb-3">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <p class="font-bold text-gray-800 mb-1">Produk Berlisensi</p>
+          <p class="text-sm text-muted">
+            Semua produk berizin resmi Kemenkes RI
+          </p>
+        </div>
+        <div class="card p-6 shadow-sm text-center">
+          <div class="icon-box mx-auto mb-3"><i class="fas fa-truck"></i></div>
+          <p class="font-bold text-gray-800 mb-1">Pengiriman Cepat</p>
+          <!-- GANTI: info pengiriman -->
+          <p class="text-sm text-muted">Siap kirim ke seluruh wilayah</p>
+        </div>
+        <div class="card p-6 shadow-sm text-center">
+          <div class="icon-box mx-auto mb-3">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <p class="font-bold text-gray-800 mb-1">Konsultasi Gratis</p>
+          <p class="text-sm text-muted">Tanya produk langsung via WhatsApp</p>
+        </div>
+      </div>
     </div>
 
     <footer class="footer text-white py-8 mt-4">
-        <div class="container mx-auto px-4 text-center">
-            <p class="font-semibold">&copy; 2026 PSF Alkes - Toko Alat Kesehatan Terpercaya</p>
-            <p class="text-sm footer-sub mt-1">Melayani kebutuhan medis rumah sakit, klinik, dan pribadi</p>
-            <div class="border-t border-blue-700 mt-4 pt-4">
-                <p class="text-sm footer-sub">part of <span class="font-semibold text-white">Group of PT. Hatamed Industri Utama</span></p>
-                <p class="text-xs footer-sub mt-1">Izin Kemenkes RI &middot; AKD 21603129105</p>
-            </div>
+      <div class="container mx-auto px-4 text-center">
+        <p class="font-semibold">
+          &copy; 2026 PSF Alkes - Toko Alat Kesehatan Terpercaya
+        </p>
+        <p class="text-sm footer-sub mt-1">
+          Melayani kebutuhan medis rumah sakit, klinik, dan pribadi
+        </p>
+        <div class="border-t border-blue-700 mt-4 pt-4">
+          <p class="text-sm footer-sub">
+            part of
+            <span class="font-semibold text-white"
+              >Group of PT. Hatamed Industri Utama</span
+            >
+          </p>
+          <p class="text-xs footer-sub mt-1">
+            Izin Kemenkes RI &middot; AKD 21603129105
+          </p>
         </div>
+      </div>
     </footer>
-
-</body>
+  </body>
 </html>
