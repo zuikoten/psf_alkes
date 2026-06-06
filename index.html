@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediStore - Toko Alat Kesehatan</title>
+    <meta name="description" content="Toko alat kesehatan online terpercaya">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            transition: all 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <!-- ==================== KONFIGURASI SUPABASE ==================== -->
+    <!-- ISI DENGAN DATA SUPABASE ANDA -->
+    <script>
+        const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";  // GANTI DENGAN URL SUPABASE ANDA
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";  // GANTI DENGAN ANON KEY ANDA
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
+    <!-- ============================================================= -->
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-hospital-user text-teal-600 text-2xl"></i>
+                <span class="text-2xl font-bold text-teal-700">MediStore</span>
+                <span class="text-sm text-gray-500 hidden md:inline">| Alat Kesehatan Profesional</span>
+            </div>
+            <div class="flex space-x-4">
+                <a href="index.html" class="text-teal-600 font-semibold border-b-2 border-teal-600 pb-1">Beranda</a>
+                <a href="katalog_produk.html" class="text-gray-600 hover:text-teal-600">Katalog</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-50 to-teal-50 py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Kesehatan Anda Prioritas Kami</h1>
+            <p class="text-xl text-gray-600 mb-8">Alat medis berkualitas dengan harga terbaik</p>
+            <a href="katalog_produk.html" class="bg-teal-600 text-white px-8 py-3 rounded-full hover:bg-teal-700 inline-flex items-center space-x-2 shadow-lg">
+                <span>Lihat Katalog</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Featured Products (Mengambil dari Supabase) -->
+    <section class="container mx-auto px-4 py-12">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <i class="fas fa-star text-yellow-500 mr-2"></i> Produk Unggulan
+        </h2>
+        <div id="featured-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-10 text-gray-500">
+                <i class="fas fa-spinner fa-spin text-3xl"></i>
+                <p class="mt-2">Memuat produk...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 MediStore - Toko Alat Kesehatan Terpercaya</p>
+            <p class="text-sm text-gray-400 mt-2">Melayani kebutuhan medis rumah sakit, klinik, dan pribadi</p>
+        </div>
+    </footer>
+
+    <script>
+        // Fungsi untuk memuat produk unggulan (ambil 4 produk terbaru atau random)
+        async function loadFeaturedProducts() {
+            const container = document.getElementById('featured-products');
+            
+            try {
+                const { data: products, error } = await supabase
+                    .from('produk')
+                    .select('*')
+                    .limit(4);
+                    
+                if (error) throw error;
+                
+                if (!products || products.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center text-gray-500">Belum ada produk tersedia</div>';
+                    return;
+                }
+                
+                container.innerHTML = products.map(product => `
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover-scale transition-all">
+                        <div class="h-48 bg-gray-100 flex items-center justify-center">
+                            ${product.gambar_url ? 
+                                `<img src="${product.gambar_url}" alt="${product.nama}" class="w-full h-full object-cover">` : 
+                                `<i class="fas fa-medkit text-6xl text-teal-300"></i>`
+                            }
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg text-gray-800 truncate">${product.nama}</h3>
+                            <p class="text-teal-600 font-bold text-xl mt-2">Rp ${product.harga.toLocaleString('id-ID')}</p>
+                            <p class="text-sm text-gray-500 mt-1 line-clamp-2">${product.deskripsi || 'Produk alat kesehatan berkualitas'}</p>
+                            <button onclick="orderViaWhatsApp('${product.nama.replace(/'/g, "\\'")}', ${product.harga})" 
+                                    class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg flex items-center justify-center space-x-2">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Beli via WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading products:', error);
+                container.innerHTML = '<div class="col-span-full text-center text-red-500">Gagal memuat produk. Periksa koneksi atau konfigurasi Supabase.</div>';
+            }
+        }
+        
+        // Fungsi global untuk WhatsApp order
+        window.orderViaWhatsApp = function(namaProduk, harga) {
+            const phoneNumber = "6281234567890"; // GANTI DENGAN NOMOR WHATSAPP ANDA (gunakan kode negara tanpa +)
+            const message = `Halo MediStore,%0A%0ASaya ingin memesan produk berikut:%0A*${namaProduk}*%0AHarga: Rp ${harga.toLocaleString('id-ID')}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+        };
+        
+        // Load produk saat halaman siap
+        document.addEventListener('DOMContentLoaded', loadFeaturedProducts);
+    </script>
+</body>
+</html>

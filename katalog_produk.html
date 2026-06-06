@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Produk - MediStore</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .hover-scale:hover {
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- ==================== KONFIGURASI SUPABASE ==================== -->
+    <script>
+        const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";  // GANTI DENGAN URL SUPABASE ANDA
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";  // GANTI DENGAN ANON KEY ANDA
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
+    <!-- ============================================================= -->
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-hospital-user text-teal-600 text-2xl"></i>
+                <span class="text-2xl font-bold text-teal-700">MediStore</span>
+            </div>
+            <div class="flex space-x-4">
+                <a href="index.html" class="text-gray-600 hover:text-teal-600">Beranda</a>
+                <a href="katalog_produk.html" class="text-teal-600 font-semibold border-b-2 border-teal-600 pb-1">Katalog</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Katalog Produk</h1>
+        <p class="text-gray-600 mb-8">Temukan alat kesehatan yang Anda butuhkan</p>
+
+        <!-- Search & Filter Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4">
+                <!-- Search Box -->
+                <div class="flex-1">
+                    <label class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-search"></i> Cari Produk
+                    </label>
+                    <input type="text" id="searchInput" placeholder="Cari nama produk..." 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500">
+                </div>
+                
+                <!-- Filter Kategori -->
+                <div class="md:w-64">
+                    <label class="block text-gray-700 font-semibold mb-2">
+                        <i class="fas fa-filter"></i> Kategori
+                    </label>
+                    <select id="categoryFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500">
+                        <option value="all">Semua Kategori</option>
+                        <!-- Kategori akan diisi dari database -->
+                    </select>
+                </div>
+
+                <!-- Reset Button -->
+                <div class="flex items-end">
+                    <button id="resetFilter" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition">
+                        <i class="fas fa-undo-alt"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Count & View -->
+        <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+            <p id="productCount" class="text-gray-600">0 produk ditemukan</p>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-10 text-gray-500">
+                <i class="fas fa-spinner fa-spin text-3xl"></i>
+                <p class="mt-2">Memuat produk...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 MediStore - Toko Alat Kesehatan</p>
+        </div>
+    </footer>
+
+    <script>
+        let allProducts = []; // Menyimpan semua produk dari database
+        let uniqueCategories = new Set();
+
+        // Fungsi untuk mengambil semua produk dari Supabase (real-time)
+        async function loadAllProducts() {
+            try {
+                const { data, error } = await supabase
+                    .from('produk')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                    
+                if (error) throw error;
+                
+                allProducts = data || [];
+                
+                // Extract unique categories
+                uniqueCategories.clear();
+                allProducts.forEach(product => {
+                    if (product.kategori && product.kategori.trim() !== '') {
+                        uniqueCategories.add(product.kategori);
+                    }
+                });
+                
+                // Populate category filter dropdown
+                const categorySelect = document.getElementById('categoryFilter');
+                categorySelect.innerHTML = '<option value="all">Semua Kategori</option>';
+                Array.from(uniqueCategories).sort().forEach(cat => {
+                    categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+                
+                // Render awal
+                filterAndRenderProducts();
+                
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('productsGrid').innerHTML = `
+                    <div class="col-span-full text-center text-red-500 py-10">
+                        <i class="fas fa-exclamation-circle text-4xl"></i>
+                        <p class="mt-2">Gagal memuat produk. Pastikan tabel "produk" ada di Supabase.</p>
+                        <p class="text-sm mt-1">Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Filter dan render berdasarkan search & kategori
+        function filterAndRenderProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCategory = document.getElementById('categoryFilter').value;
+            
+            let filtered = allProducts.filter(product => {
+                // Filter by search
+                const matchesSearch = product.nama.toLowerCase().includes(searchTerm);
+                
+                // Filter by category
+                let matchesCategory = true;
+                if (selectedCategory !== 'all') {
+                    matchesCategory = product.kategori === selectedCategory;
+                }
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            // Update count
+            document.getElementById('productCount').innerText = `${filtered.length} produk ditemukan`;
+            
+            // Render ke grid
+            const grid = document.getElementById('productsGrid');
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-10 text-gray-500">
+                        <i class="fas fa-box-open text-4xl"></i>
+                        <p class="mt-2">Tidak ada produk yang sesuai</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filtered.map(product => `
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all hover-scale">
+                    <div class="h-48 bg-gray-100 flex items-center justify-center">
+                        ${product.gambar_url ? 
+                            `<img src="${product.gambar_url}" alt="${product.nama}" class="w-full h-full object-cover">` : 
+                            `<i class="fas fa-medkit text-6xl text-teal-300"></i>`
+                        }
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-gray-800 line-clamp-1">${product.nama}</h3>
+                            ${product.kategori ? `<span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">${product.kategori}</span>` : ''}
+                        </div>
+                        <p class="text-teal-600 font-bold text-xl mt-2">Rp ${product.harga.toLocaleString('id-ID')}</p>
+                        <p class="text-sm text-gray-500 mt-1 line-clamp-2">${product.deskripsi || 'Alat kesehatan medis standar'}</p>
+                        <button onclick="orderViaWhatsApp('${product.nama.replace(/'/g, "\\'")}', ${product.harga})" 
+                                class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg flex items-center justify-center space-x-2 transition">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Beli via WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Fungsi global WhatsApp order
+        window.orderViaWhatsApp = function(namaProduk, harga) {
+            const phoneNumber = "6281234567890"; // GANTI DENGAN NOMOR WHATSAPP ANDA
+            const message = `Halo MediStore,%0A%0ASaya ingin memesan produk berikut:%0A*${namaProduk}*%0AHarga: Rp ${harga.toLocaleString('id-ID')}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(whatsappUrl, '_blank');
+        };
+        
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterAndRenderProducts);
+        document.getElementById('categoryFilter').addEventListener('change', filterAndRenderProducts);
+        document.getElementById('resetFilter').addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = 'all';
+            filterAndRenderProducts();
+        });
+        
+        // Subscribe ke perubahan real-time Supabase
+        function subscribeToChanges() {
+            const subscription = supabase
+                .channel('produk_changes')
+                .on('postgres_changes', 
+                    { event: '*', schema: 'public', table: 'produk' }, 
+                    (payload) => {
+                        console.log('Real-time update:', payload);
+                        loadAllProducts(); // Reload ulang data
+                    }
+                )
+                .subscribe();
+        }
+        
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllProducts();
+            subscribeToChanges();
+        });
+    </script>
+</body>
+</html>
