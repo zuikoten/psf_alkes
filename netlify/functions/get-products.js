@@ -94,6 +94,27 @@ exports.handler = async (event, context) => {
             });
         }
 
+        // ── MODE: detail (halaman produk — fetch satu produk by id) ───────
+        if (mode === 'detail') {
+            const id = parseInt(params.id);
+            if (!id || isNaN(id)) {
+                return respond({ data: null, success: false, error: 'ID produk tidak valid' });
+            }
+
+            const { data, error } = await supabase
+                .from('produk')
+                .select('*, kategori(nama_kategori)')   // join nama kategori sekalian
+                .eq('id', id)
+                .single();
+
+            if (error) {
+                // .single() throw error jika tidak ditemukan
+                return respond({ data: null, success: false, error: 'Produk tidak ditemukan' });
+            }
+
+            return respond({ data, success: true });
+        }
+
         // ── MODE: default / legacy (kompatibel dengan kode lama) ───────────
         const limit = limitParam || null;
         let query = supabase

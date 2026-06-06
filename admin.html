@@ -1,413 +1,731 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - MediStore</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - PSF Alkes</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Quill RTF Editor -->
+    <link
+      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <style>
-        :root {
-            --color-primary:        #1565C0;
-            --color-primary-dark:   #1C3F91;
-            --color-secondary:      #4A9FE8;
-            --color-light:          #90CAF9;
-            --color-soft:           #E3F2FD;
-            --color-text-primary:   #1E4FA3;
-            --color-text-muted:     #6B7280;
-            --color-bg-page:        #F5F9FF;
-            --color-white:          #FFFFFF;
-            --color-danger:         #DC2626;
-            --color-danger-dark:    #B91C1C;
-        }
+      :root {
+        --color-primary: #1565c0;
+        --color-primary-dark: #1c3f91;
+        --color-secondary: #4a9fe8;
+        --color-light: #90caf9;
+        --color-soft: #e3f2fd;
+        --color-text-primary: #1e4fa3;
+        --color-text-muted: #6b7280;
+        --color-bg-page: #f5f9ff;
+        --color-white: #ffffff;
+        --color-danger: #dc2626;
+        --color-danger-dark: #b91c1c;
+      }
 
-        body                    { background-color: var(--color-bg-page); }
-        .bg-primary             { background-color: var(--color-primary); }
-        .bg-soft                { background-color: var(--color-soft); }
-        .text-primary           { color: var(--color-text-primary); }
-        .text-muted             { color: var(--color-text-muted); }
+      body {
+        background-color: var(--color-bg-page);
+      }
+      .bg-primary {
+        background-color: var(--color-primary);
+      }
+      .bg-soft {
+        background-color: var(--color-soft);
+      }
+      .text-primary {
+        color: var(--color-text-primary);
+      }
+      .text-muted {
+        color: var(--color-text-muted);
+      }
 
-        .btn-primary {
-            background-color: var(--color-primary);
-            color: var(--color-white);
-            transition: background-color 0.2s;
-        }
-        .btn-primary:hover      { background-color: var(--color-primary-dark); }
-        .btn-secondary {
-            background-color: var(--color-secondary);
-            color: var(--color-white);
-            transition: background-color 0.2s;
-        }
-        .btn-secondary:hover    { background-color: var(--color-primary); }
-        .btn-danger {
-            background-color: var(--color-danger);
-            color: var(--color-white);
-            transition: background-color 0.2s;
-        }
-        .btn-danger:hover       { background-color: var(--color-danger-dark); }
+      .btn-primary {
+        background-color: var(--color-primary);
+        color: var(--color-white);
+        transition: background-color 0.2s;
+      }
+      .btn-primary:hover {
+        background-color: var(--color-primary-dark);
+      }
+      .btn-secondary {
+        background-color: var(--color-secondary);
+        color: var(--color-white);
+        transition: background-color 0.2s;
+      }
+      .btn-secondary:hover {
+        background-color: var(--color-primary);
+      }
+      .btn-danger {
+        background-color: var(--color-danger);
+        color: var(--color-white);
+        transition: background-color 0.2s;
+      }
+      .btn-danger:hover {
+        background-color: var(--color-danger-dark);
+      }
 
-        .login-bg { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%); }
-        .navbar-icon  { color: var(--color-light); }
-        .navbar       { background-color: var(--color-primary); }
+      .login-bg {
+        background: linear-gradient(
+          135deg,
+          var(--color-primary) 0%,
+          var(--color-secondary) 100%
+        );
+      }
+      .navbar-icon {
+        color: var(--color-light);
+      }
+      .navbar {
+        background-color: var(--color-primary);
+      }
 
-        .tab-active {
-            background-color: var(--color-white);
-            color: var(--color-primary);
-            border-bottom: 3px solid var(--color-primary);
-            font-weight: 700;
-        }
-        .tab-inactive           { color: rgba(255,255,255,0.75); }
-        .tab-inactive:hover     { color: var(--color-white); }
-        .tabs-bar               { background-color: var(--color-secondary); }
-        .page-title             { color: var(--color-primary); }
-        .action-edit            { color: var(--color-secondary); }
-        .action-edit:hover      { color: var(--color-primary-dark); }
-        .action-delete          { color: var(--color-danger); }
-        .action-delete:hover    { color: var(--color-danger-dark); }
-        .table-wrapper          { overflow-x: auto; }
+      .tab-active {
+        background-color: var(--color-white);
+        color: var(--color-primary);
+        border-bottom: 3px solid var(--color-primary);
+        font-weight: 700;
+      }
+      .tab-inactive {
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .tab-inactive:hover {
+        color: var(--color-white);
+      }
+      .tabs-bar {
+        background-color: var(--color-secondary);
+      }
+      .page-title {
+        color: var(--color-primary);
+      }
+      .action-edit {
+        color: var(--color-secondary);
+      }
+      .action-edit:hover {
+        color: var(--color-primary-dark);
+      }
+      .action-delete {
+        color: var(--color-danger);
+      }
+      .action-delete:hover {
+        color: var(--color-danger-dark);
+      }
+      .table-wrapper {
+        overflow-x: auto;
+      }
 
-        .login-card     { background-color: var(--color-primary-dark); border: 1px solid rgba(255,255,255,0.15); }
-        .login-input {
-            background-color: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: var(--color-white);
-        }
-        .login-input::placeholder { color: rgba(255,255,255,0.5); }
-        .login-input:focus {
-            outline: none;
-            border-color: var(--color-light);
-            background-color: rgba(255,255,255,0.15);
-        }
+      .login-card {
+        background-color: var(--color-primary-dark);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .login-input {
+        background-color: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: var(--color-white);
+      }
+      .login-input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .login-input:focus {
+        outline: none;
+        border-color: var(--color-light);
+        background-color: rgba(255, 255, 255, 0.15);
+      }
 
-        /* Toggle switch untuk is_featured */
-        .toggle-switch {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            gap: 0.75rem;
-        }
-        .toggle-switch input         { display: none; }
-        .toggle-track {
-            width: 48px; height: 26px;
-            background: #D1D5DB;
-            border-radius: 9999px;
-            transition: background 0.2s;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .toggle-track::after {
-            content: '';
-            position: absolute;
-            top: 3px; left: 3px;
-            width: 20px; height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-        .toggle-switch input:checked + .toggle-track { background: var(--color-primary); }
-        .toggle-switch input:checked + .toggle-track::after { transform: translateX(22px); }
+      /* Toggle switch */
+      .toggle-switch {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        gap: 0.75rem;
+      }
+      .toggle-switch input {
+        display: none;
+      }
+      .toggle-track {
+        width: 48px;
+        height: 26px;
+        background: #d1d5db;
+        border-radius: 9999px;
+        transition: background 0.2s;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .toggle-track::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        transition: transform 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .toggle-switch input:checked + .toggle-track {
+        background: var(--color-primary);
+      }
+      .toggle-switch input:checked + .toggle-track::after {
+        transform: translateX(22px);
+      }
 
-        /* Badge unggulan di tabel */
-        .badge-featured {
-            display: inline-flex; align-items: center; gap: 4px;
-            background: #FEF9C3; color: #854D0E;
-            font-size: 0.7rem; font-weight: 700;
-            padding: 2px 8px; border-radius: 9999px;
-            white-space: nowrap;
-        }
-        .badge-not-featured {
-            display: inline-flex; align-items: center;
-            color: #9CA3AF; font-size: 0.75rem;
-        }
+      /* Badge unggulan */
+      .badge-featured {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #fef9c3;
+        color: #854d0e;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 9999px;
+        white-space: nowrap;
+      }
+      .badge-not-featured {
+        display: inline-flex;
+        align-items: center;
+        color: #9ca3af;
+        font-size: 0.75rem;
+      }
 
-        /* Pagination */
-        .pagination-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            min-width: 2.25rem; height: 2.25rem; padding: 0 0.5rem;
-            border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500;
-            border: 1px solid #D1D5DB; background: var(--color-white);
-            color: #374151; cursor: pointer; transition: all 0.15s; user-select: none;
-        }
-        .pagination-btn:hover:not(:disabled):not(.active) {
-            border-color: var(--color-secondary); color: var(--color-primary); background: var(--color-soft);
-        }
-        .pagination-btn.active {
-            background: var(--color-primary); border-color: var(--color-primary); color: #fff; cursor: default;
-        }
-        .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+      /* Pagination */
+      .pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.25rem;
+        height: 2.25rem;
+        padding: 0 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: 1px solid #d1d5db;
+        background: var(--color-white);
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.15s;
+        user-select: none;
+      }
+      .pagination-btn:hover:not(:disabled):not(.active) {
+        border-color: var(--color-secondary);
+        color: var(--color-primary);
+        background: var(--color-soft);
+      }
+      .pagination-btn.active {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: #fff;
+        cursor: default;
+      }
+      .pagination-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* Quill editor customization */
+      #deskripsi-editor {
+        height: 200px;
+        background: white;
+        border-radius: 0 0 6px 6px;
+      }
+      .ql-toolbar.ql-snow {
+        border-color: #d1d5db;
+        border-radius: 6px 6px 0 0;
+      }
+      .ql-container.ql-snow {
+        border-color: #d1d5db;
+        border-radius: 0 0 6px 6px;
+        font-size: 0.9rem;
+      }
+      .ql-editor.ql-blank::before {
+        color: #9ca3af;
+        font-style: normal;
+      }
     </style>
-</head>
-<body>
-
-<!-- Login Screen -->
-<div id="loginScreen" class="min-h-screen flex items-center justify-center login-bg">
-    <div class="login-card rounded-xl shadow-2xl p-8 w-96">
+  </head>
+  <body>
+    <!-- Login Screen -->
+    <div
+      id="loginScreen"
+      class="min-h-screen flex items-center justify-center login-bg"
+    >
+      <div class="login-card rounded-xl shadow-2xl p-8 w-96">
         <div class="text-center mb-6">
-            <i class="fas fa-hospital-user text-5xl mb-3" style="color:var(--color-light)"></i>
-            <h2 class="text-2xl font-bold text-white">Admin Login</h2>
-            <p class="text-sm mt-1" style="color:rgba(255,255,255,0.7)">Masukkan password untuk mengakses dashboard</p>
+          <i
+            class="fas fa-hospital-user text-5xl mb-3"
+            style="color: var(--color-light)"
+          ></i>
+          <h2 class="text-2xl font-bold text-white">Admin Login</h2>
+          <p class="text-sm mt-1" style="color: rgba(255, 255, 255, 0.7)">
+            Masukkan password untuk mengakses dashboard
+          </p>
         </div>
-        <input type="password" id="passwordInput" placeholder="Password"
-               class="login-input w-full px-4 py-2 rounded-lg mb-4"
-               onkeydown="if(event.key==='Enter') checkPassword()">
-        <button onclick="checkPassword()" class="btn-primary w-full py-2 rounded-lg">
-            <i class="fas fa-sign-in-alt"></i> Login
+        <input
+          type="password"
+          id="passwordInput"
+          placeholder="Password"
+          class="login-input w-full px-4 py-2 rounded-lg mb-4"
+          onkeydown="if (event.key === 'Enter') checkPassword();"
+        />
+        <button
+          onclick="checkPassword()"
+          class="btn-primary w-full py-2 rounded-lg"
+        >
+          <i class="fas fa-sign-in-alt"></i> Login
         </button>
+      </div>
     </div>
-</div>
 
-<!-- Main Admin Dashboard -->
-<div id="adminDashboard" style="display:none">
-
-    <nav class="navbar shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap gap-2">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-hospital-user text-2xl navbar-icon"></i>
-                <span class="text-xl font-bold text-white">PSF Alkes Admin</span>
-            </div>
-            <button onclick="logout()" class="btn-secondary px-4 py-2 rounded-lg text-sm">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+    <!-- Main Admin Dashboard -->
+    <div id="adminDashboard" style="display: none">
+      <nav class="navbar shadow-md sticky top-0 z-50">
+        <div
+          class="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap gap-2"
+        >
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-hospital-user text-2xl navbar-icon"></i>
+            <span class="text-xl font-bold text-white">PSF Alkes Admin</span>
+          </div>
+          <button
+            onclick="logout()"
+            class="btn-secondary px-4 py-2 rounded-lg text-sm"
+          >
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
         </div>
-    </nav>
+      </nav>
 
-    <div class="tabs-bar border-b border-blue-800">
+      <div class="tabs-bar border-b border-blue-800">
         <div class="container mx-auto px-4">
-            <div class="flex gap-1">
-                <button id="tabProducts"    onclick="switchTab('products')"    class="tab-active   px-6 py-3 font-semibold transition"><i class="fas fa-boxes"></i> Produk</button>
-                <button id="tabCategories"  onclick="switchTab('categories')"  class="tab-inactive px-6 py-3 font-semibold transition"><i class="fas fa-tags"></i> Kategori</button>
-            </div>
+          <div class="flex gap-1">
+            <button
+              id="tabProducts"
+              onclick="switchTab('products')"
+              class="tab-active px-6 py-3 font-semibold transition"
+            >
+              <i class="fas fa-boxes"></i> Produk
+            </button>
+            <button
+              id="tabCategories"
+              onclick="switchTab('categories')"
+              class="tab-inactive px-6 py-3 font-semibold transition"
+            >
+              <i class="fas fa-tags"></i> Kategori
+            </button>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="container mx-auto px-4 py-8">
-
+      <div class="container mx-auto px-4 py-8">
         <!-- Panel Produk -->
         <div id="productsPanel">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-bold page-title">Manajemen Produk</h1>
-                <button onclick="showAddProductModal()" class="btn-primary px-4 py-2 rounded-lg">
-                    <i class="fas fa-plus"></i> Tambah Produk
-                </button>
-            </div>
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold page-title">Manajemen Produk</h1>
+            <button
+              onclick="showAddProductModal()"
+              class="btn-primary px-4 py-2 rounded-lg"
+            >
+              <i class="fas fa-plus"></i> Tambah Produk
+            </button>
+          </div>
 
-            <!-- Search & Filter bar -->
-            <div class="bg-white rounded-lg shadow-sm border p-4 mb-4" style="border-color:var(--color-soft)">
-                <div class="flex flex-col md:flex-row gap-3">
-                    <div class="flex-1 relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
-                        <input type="text" id="adminSearch" placeholder="Cari nama produk..."
-                               class="w-full pl-9 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-400"
-                               style="border-color:#D1D5DB">
-                    </div>
-                    <div class="md:w-48">
-                        <select id="adminKategori" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-400" style="border-color:#D1D5DB">
-                            <option value="all">Semua Kategori</option>
-                        </select>
-                    </div>
-                    <div class="md:w-44">
-                        <select id="adminFeatured" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-400" style="border-color:#D1D5DB">
-                            <option value="">Semua Produk</option>
-                            <option value="true">&#9733; Unggulan saja</option>
-                        </select>
-                    </div>
-                    <div class="md:w-32">
-                        <select id="adminLimit" class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-400" style="border-color:#D1D5DB">
-                            <option value="20">20 / hal</option>
-                            <option value="50">50 / hal</option>
-                            <option value="100">100 / hal</option>
-                        </select>
-                    </div>
-                    <button onclick="resetAdminFilter()" class="px-4 py-2 rounded-lg text-sm text-white" style="background:#6B7280">
-                        <i class="fas fa-undo-alt"></i> Reset
-                    </button>
-                </div>
+          <!-- Search & Filter bar -->
+          <div
+            class="bg-white rounded-lg shadow-sm border p-4 mb-4"
+            style="border-color: var(--color-soft)"
+          >
+            <div class="flex flex-col md:flex-row gap-3">
+              <div class="flex-1 relative">
+                <i
+                  class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm"
+                ></i>
+                <input
+                  type="text"
+                  id="adminSearch"
+                  placeholder="Cari nama produk..."
+                  class="w-full pl-9 pr-4 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-400"
+                  style="border-color: #d1d5db"
+                />
+              </div>
+              <div class="md:w-48">
+                <select
+                  id="adminKategori"
+                  class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-400"
+                  style="border-color: #d1d5db"
+                >
+                  <option value="all">Semua Kategori</option>
+                </select>
+              </div>
+              <div class="md:w-44">
+                <select
+                  id="adminFeatured"
+                  class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-400"
+                  style="border-color: #d1d5db"
+                >
+                  <option value="">Semua Produk</option>
+                  <option value="true">&#9733; Unggulan saja</option>
+                </select>
+              </div>
+              <div class="md:w-32">
+                <select
+                  id="adminLimit"
+                  class="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:border-blue-400"
+                  style="border-color: #d1d5db"
+                >
+                  <option value="20">20 / hal</option>
+                  <option value="50">50 / hal</option>
+                  <option value="100">100 / hal</option>
+                </select>
+              </div>
+              <button
+                onclick="resetAdminFilter()"
+                class="px-4 py-2 rounded-lg text-sm text-white"
+                style="background: #6b7280"
+              >
+                <i class="fas fa-undo-alt"></i> Reset
+              </button>
             </div>
+          </div>
 
-            <div class="flex justify-between items-center mb-3">
-                <p id="adminProductCount" class="text-sm text-muted"></p>
-            </div>
+          <div class="flex justify-between items-center mb-3">
+            <p id="adminProductCount" class="text-sm text-muted"></p>
+          </div>
 
-            <div id="productsContainer">
-                <div class="text-center py-10 text-muted">Memuat produk...</div>
-            </div>
+          <div id="productsContainer">
+            <div class="text-center py-10 text-muted">Memuat produk...</div>
+          </div>
 
-            <div id="adminPaginationWrapper" class="mt-6 flex flex-col items-center gap-2 hidden">
-                <div id="adminPaginationControls" class="flex flex-wrap justify-center gap-1.5"></div>
-                <p id="adminPaginationInfo" class="text-sm text-muted"></p>
-            </div>
+          <div
+            id="adminPaginationWrapper"
+            class="mt-6 flex flex-col items-center gap-2 hidden"
+          >
+            <div
+              id="adminPaginationControls"
+              class="flex flex-wrap justify-center gap-1.5"
+            ></div>
+            <p id="adminPaginationInfo" class="text-sm text-muted"></p>
+          </div>
         </div>
 
         <!-- Panel Kategori -->
-        <div id="categoriesPanel" style="display:none">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-bold page-title">Manajemen Kategori</h1>
-                <button onclick="showAddCategoryModal()" class="btn-primary px-4 py-2 rounded-lg">
-                    <i class="fas fa-plus"></i> Tambah Kategori
-                </button>
-            </div>
-            <div id="categoriesContainer">
-                <div class="text-center py-10 text-muted">Memuat kategori...</div>
-            </div>
+        <div id="categoriesPanel" style="display: none">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold page-title">Manajemen Kategori</h1>
+            <button
+              onclick="showAddCategoryModal()"
+              class="btn-primary px-4 py-2 rounded-lg"
+            >
+              <i class="fas fa-plus"></i> Tambah Kategori
+            </button>
+          </div>
+          <div id="categoriesContainer">
+            <div class="text-center py-10 text-muted">Memuat kategori...</div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- ═══════════════════════ MODAL PRODUK ═══════════════════════ -->
-<div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-screen overflow-y-auto">
+    <!-- ═══════════════════════ MODAL PRODUK ═══════════════════════ -->
+    <div
+      id="productModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    >
+      <div
+        class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-screen overflow-y-auto"
+      >
         <div class="p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="productModalTitle" class="text-2xl font-bold page-title">Tambah Produk</h2>
-                <button onclick="closeProductModal()" class="text-muted hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
+          <div class="flex justify-between items-center mb-4">
+            <h2 id="productModalTitle" class="text-2xl font-bold page-title">
+              Tambah Produk
+            </h2>
+            <button
+              onclick="closeProductModal()"
+              class="text-muted hover:text-gray-700"
+            >
+              <i class="fas fa-times text-2xl"></i>
+            </button>
+          </div>
+          <form id="productForm">
+            <input type="hidden" id="productId" />
+
+            <div class="mb-4">
+              <label class="block text-gray-700 font-semibold mb-2"
+                >Nama Produk *</label
+              >
+              <input
+                type="text"
+                id="nama"
+                required
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"
+              />
             </div>
-            <form id="productForm">
-                <input type="hidden" id="productId">
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Nama Produk *</label>
-                    <input type="text" id="nama" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400">
-                </div>
+            <div class="mb-4">
+              <label class="block text-gray-700 font-semibold mb-2"
+                >Kategori *</label
+              >
+              <select
+                id="kategori_id"
+                required
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"
+              >
+                <option value="">Pilih Kategori</option>
+              </select>
+            </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Kategori *</label>
-                    <select id="kategori_id" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400">
-                        <option value="">Pilih Kategori</option>
-                    </select>
-                </div>
+            <div class="mb-4">
+              <label class="block text-gray-700 font-semibold mb-2"
+                >Harga (Rp) *</label
+              >
+              <input
+                type="number"
+                id="harga"
+                required
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"
+              />
+            </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Harga (Rp) *</label>
-                    <input type="number" id="harga" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400">
-                </div>
+            <!-- Deskripsi dengan Quill RTF Editor -->
+            <div class="mb-4">
+              <label class="block text-gray-700 font-semibold mb-2"
+                >Deskripsi & Spesifikasi</label
+              >
+              <div id="deskripsi-editor"></div>
+              <!-- Hidden input yang menyimpan HTML hasil Quill sebelum submit -->
+              <input type="hidden" id="deskripsi" />
+            </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
-                    <textarea id="deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"></textarea>
-                </div>
+            <!-- Toggle is_featured -->
+            <div
+              class="mb-4 p-4 rounded-lg"
+              style="
+                background: var(--color-soft);
+                border: 1px solid var(--color-light);
+              "
+            >
+              <label class="toggle-switch">
+                <input type="checkbox" id="is_featured" />
+                <span class="toggle-track"></span>
+                <span class="font-semibold text-gray-700">
+                  <i class="fas fa-star text-yellow-500 mr-1"></i> Tampilkan
+                  sebagai Produk Unggulan
+                </span>
+              </label>
+              <p class="text-xs text-muted mt-2 ml-1">
+                Produk yang diaktifkan akan muncul di section "Produk Unggulan"
+                halaman beranda.
+              </p>
+            </div>
 
-                <!-- ★ FIELD BARU: toggle is_featured -->
-                <div class="mb-4 p-4 rounded-lg" style="background:var(--color-soft); border:1px solid var(--color-light)">
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="is_featured">
-                        <span class="toggle-track"></span>
-                        <span class="font-semibold text-gray-700">
-                            <i class="fas fa-star text-yellow-500 mr-1"></i> Tampilkan sebagai Produk Unggulan
-                        </span>
-                    </label>
-                    <p class="text-xs text-muted mt-2 ml-1">Produk yang diaktifkan akan muncul di section "Produk Unggulan" halaman beranda.</p>
-                </div>
+            <div class="mb-4">
+              <label class="block text-gray-700 font-semibold mb-2"
+                >Gambar Produk</label
+              >
+              <input
+                type="file"
+                id="gambar"
+                accept="image/*"
+                class="w-full px-4 py-2 border rounded-lg"
+              />
+              <div id="currentImage" class="mt-2 hidden">
+                <p class="text-sm text-muted">Gambar saat ini:</p>
+                <img
+                  id="currentImagePreview"
+                  src=""
+                  class="h-20 w-20 object-cover rounded mt-1"
+                />
+              </div>
+            </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Gambar Produk</label>
-                    <input type="file" id="gambar" accept="image/*" class="w-full px-4 py-2 border rounded-lg">
-                    <div id="currentImage" class="mt-2 hidden">
-                        <p class="text-sm text-muted">Gambar saat ini:</p>
-                        <img id="currentImagePreview" src="" class="h-20 w-20 object-cover rounded mt-1">
-                    </div>
-                </div>
-
-                <div class="flex gap-3">
-                    <button type="submit" class="btn-primary flex-1 py-2 rounded-lg">Simpan</button>
-                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Batal</button>
-                </div>
-            </form>
+            <div class="flex gap-3">
+              <button type="submit" class="btn-primary flex-1 py-2 rounded-lg">
+                Simpan
+              </button>
+              <button
+                type="button"
+                onclick="closeProductModal()"
+                class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600"
+              >
+                Batal
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- ═══════════════════════ MODAL KATEGORI ═══════════════════════ -->
-<div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+    <!-- ═══════════════════════ MODAL KATEGORI ═══════════════════════ -->
+    <div
+      id="categoryModal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
         <div class="p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="categoryModalTitle" class="text-2xl font-bold page-title">Tambah Kategori</h2>
-                <button onclick="closeCategoryModal()" class="text-muted hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
+          <div class="flex justify-between items-center mb-4">
+            <h2 id="categoryModalTitle" class="text-2xl font-bold page-title">
+              Tambah Kategori
+            </h2>
+            <button
+              onclick="closeCategoryModal()"
+              class="text-muted hover:text-gray-700"
+            >
+              <i class="fas fa-times text-2xl"></i>
+            </button>
+          </div>
+          <form id="categoryForm">
+            <input type="hidden" id="categoryId" />
+            <div class="mb-4">
+              <label class="block text-gray-700 font-semibold mb-2"
+                >Nama Kategori *</label
+              >
+              <input
+                type="text"
+                id="nama_kategori"
+                required
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"
+              />
             </div>
-            <form id="categoryForm">
-                <input type="hidden" id="categoryId">
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Nama Kategori *</label>
-                    <input type="text" id="nama_kategori" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
-                    <textarea id="cat_deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"></textarea>
-                </div>
-                <div class="flex gap-3">
-                    <button type="submit" class="btn-primary flex-1 py-2 rounded-lg">Simpan</button>
-                    <button type="button" onclick="closeCategoryModal()" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Batal</button>
-                </div>
-            </form>
+            <div class="mb-4">
+              <label class="block text-gray-700 font-semibold mb-2"
+                >Deskripsi</label
+              >
+              <textarea
+                id="cat_deskripsi"
+                rows="3"
+                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"
+              ></textarea>
+            </div>
+            <div class="flex gap-3">
+              <button type="submit" class="btn-primary flex-1 py-2 rounded-lg">
+                Simpan
+              </button>
+              <button
+                type="button"
+                onclick="closeCategoryModal()"
+                class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600"
+              >
+                Batal
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-</div>
 
-<script>
-    let categoriesList = [];
+    <script>
+      let categoriesList = [];
 
-    // ── Login ──────────────────────────────────────────────────────────────
-    async function checkPassword() {
-        const password = document.getElementById('passwordInput').value;
-        const res  = await fetch('/.netlify/functions/check-password', {
-            method: 'POST', body: JSON.stringify({ password })
+      // ── Inisialisasi Quill ─────────────────────────────────────────────────
+      const quill = new Quill("#deskripsi-editor", {
+        theme: "snow",
+        placeholder: "Tulis deskripsi dan spesifikasi produk...",
+        modules: {
+          toolbar: [
+            ["bold", "italic"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["clean"],
+          ],
+        },
+      });
+
+      // Helper: cek apakah isi Quill benar-benar kosong
+      function quillIsEmpty() {
+        return quill.getText().trim().length === 0;
+      }
+
+      // ── Login ──────────────────────────────────────────────────────────────
+      async function checkPassword() {
+        const password = document.getElementById("passwordInput").value;
+        const res = await fetch("/.netlify/functions/check-password", {
+          method: "POST",
+          body: JSON.stringify({ password }),
         });
         const { ok } = await res.json();
         if (ok) {
-            document.getElementById('loginScreen').style.display  = 'none';
-            document.getElementById('adminDashboard').style.display = 'block';
-            loadCategories();
-            loadProducts();
+          document.getElementById("loginScreen").style.display = "none";
+          document.getElementById("adminDashboard").style.display = "block";
+          loadCategories();
+          loadProducts();
         } else {
-            Swal.fire('Error', 'Password salah!', 'error');
+          Swal.fire("Error", "Password salah!", "error");
         }
-    }
+      }
 
-    function logout() {
-        document.getElementById('loginScreen').style.display    = 'flex';
-        document.getElementById('adminDashboard').style.display = 'none';
-    }
+      function logout() {
+        document.getElementById("loginScreen").style.display = "flex";
+        document.getElementById("adminDashboard").style.display = "none";
+      }
 
-    // ── Tab ────────────────────────────────────────────────────────────────
-    function switchTab(tab) {
-        const isProducts = tab === 'products';
-        document.getElementById('productsPanel').style.display    = isProducts ? 'block' : 'none';
-        document.getElementById('categoriesPanel').style.display  = isProducts ? 'none'  : 'block';
-        document.getElementById('tabProducts').className   = isProducts ? 'tab-active px-6 py-3 font-semibold transition'   : 'tab-inactive px-6 py-3 font-semibold transition';
-        document.getElementById('tabCategories').className = isProducts ? 'tab-inactive px-6 py-3 font-semibold transition' : 'tab-active px-6 py-3 font-semibold transition';
-        if (isProducts) loadProducts(); else loadCategoriesList();
-    }
+      // ── Tab ────────────────────────────────────────────────────────────────
+      function switchTab(tab) {
+        const isProducts = tab === "products";
+        document.getElementById("productsPanel").style.display = isProducts
+          ? "block"
+          : "none";
+        document.getElementById("categoriesPanel").style.display = isProducts
+          ? "none"
+          : "block";
+        document.getElementById("tabProducts").className = isProducts
+          ? "tab-active px-6 py-3 font-semibold transition"
+          : "tab-inactive px-6 py-3 font-semibold transition";
+        document.getElementById("tabCategories").className = isProducts
+          ? "tab-inactive px-6 py-3 font-semibold transition"
+          : "tab-active px-6 py-3 font-semibold transition";
+        if (isProducts) loadProducts();
+        else loadCategoriesList();
+      }
 
-    // ── API helper ─────────────────────────────────────────────────────────
-    async function apiCall(endpoint, method, body = null) {
-        const options = { method, headers: { 'Content-Type': 'application/json' } };
+      // ── API helper ─────────────────────────────────────────────────────────
+      async function apiCall(endpoint, method, body = null) {
+        const options = {
+          method,
+          headers: { "Content-Type": "application/json" },
+        };
         if (body) options.body = JSON.stringify(body);
         const res = await fetch(`/.netlify/functions/${endpoint}`, options);
         return await res.json();
-    }
+      }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
+      function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[m],
+        );
+      }
 
-    // ══════════════════════ KATEGORI ══════════════════════════════════════
+      // ══════════════════════ KATEGORI ══════════════════════════════════════
 
-    async function loadCategoriesList() {
-        const container = document.getElementById('categoriesContainer');
-        container.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';
+      async function loadCategoriesList() {
+        const container = document.getElementById("categoriesContainer");
+        container.innerHTML =
+          '<div class="text-center py-10"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';
         try {
-            const result = await apiCall('admin-categories', 'GET');
-            if (result.error) throw new Error(result.error);
-            const categories = result.data || [];
-            if (categories.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-muted">Belum ada kategori. Klik "Tambah Kategori".</div>';
-                return;
-            }
-            container.innerHTML = `
+          const result = await apiCall("admin-categories", "GET");
+          if (result.error) throw new Error(result.error);
+          const categories = result.data || [];
+          if (categories.length === 0) {
+            container.innerHTML =
+              '<div class="text-center py-10 text-muted">Belum ada kategori. Klik "Tambah Kategori".</div>';
+            return;
+          }
+          container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="table-wrapper">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -420,164 +738,219 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-                                ${categories.map(cat => `
+                                ${categories
+                                  .map(
+                                    (cat) => `
                                     <tr class="hover:bg-soft">
                                         <td class="px-4 py-3 text-sm">${cat.id}</td>
                                         <td class="px-4 py-3 font-medium">${escapeHtml(cat.nama_kategori)}</td>
-                                        <td class="px-4 py-3 text-sm text-muted">${escapeHtml(cat.deskripsi) || '-'}</td>
+                                        <td class="px-4 py-3 text-sm text-muted">${escapeHtml(cat.deskripsi) || "-"}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <button onclick="editCategory(${cat.id})" class="action-edit mr-3 text-sm"><i class="fas fa-edit"></i> Edit</button>
                                             <button onclick="deleteCategory(${cat.id})" class="action-delete text-sm"><i class="fas fa-trash"></i> Hapus</button>
                                         </td>
                                     </tr>
-                                `).join('')}
+                                `,
+                                  )
+                                  .join("")}
                             </tbody>
                         </table>
                     </div>
                 </div>`;
         } catch (e) {
-            container.innerHTML = `<div class="text-center py-10 text-red-500">Error: ${e.message}</div>`;
+          container.innerHTML = `<div class="text-center py-10 text-red-500">Error: ${e.message}</div>`;
         }
-    }
+      }
 
-    async function loadCategories() {
+      async function loadCategories() {
         try {
-            const result = await apiCall('admin-categories', 'GET');
-            if (!result.error) {
-                categoriesList = result.data || [];
+          const result = await apiCall("admin-categories", "GET");
+          if (!result.error) {
+            categoriesList = result.data || [];
 
-                // Populate dropdown di form produk
-                const select = document.getElementById('kategori_id');
-                select.innerHTML = '<option value="">Pilih Kategori</option>';
-                categoriesList.forEach(cat => {
-                    select.innerHTML += `<option value="${cat.id}">${escapeHtml(cat.nama_kategori)}</option>`;
-                });
+            const select = document.getElementById("kategori_id");
+            select.innerHTML = '<option value="">Pilih Kategori</option>';
+            categoriesList.forEach((cat) => {
+              select.innerHTML += `<option value="${cat.id}">${escapeHtml(cat.nama_kategori)}</option>`;
+            });
 
-                // Populate filter kategori di toolbar
-                const adminSel = document.getElementById('adminKategori');
-                adminSel.innerHTML = '<option value="all">Semua Kategori</option>';
-                categoriesList.forEach(cat => {
-                    adminSel.innerHTML += `<option value="${cat.id}">${escapeHtml(cat.nama_kategori)}</option>`;
-                });
-            }
-        } catch (e) { console.error('Load categories error:', e); }
-    }
+            const adminSel = document.getElementById("adminKategori");
+            adminSel.innerHTML = '<option value="all">Semua Kategori</option>';
+            categoriesList.forEach((cat) => {
+              adminSel.innerHTML += `<option value="${cat.id}">${escapeHtml(cat.nama_kategori)}</option>`;
+            });
+          }
+        } catch (e) {
+          console.error("Load categories error:", e);
+        }
+      }
 
-    function showAddCategoryModal() {
-        document.getElementById('categoryForm').reset();
-        document.getElementById('categoryId').value = '';
-        document.getElementById('categoryModalTitle').innerText = 'Tambah Kategori';
-        document.getElementById('categoryModal').classList.replace('hidden', 'flex');
-    }
-    function closeCategoryModal() {
-        document.getElementById('categoryModal').classList.replace('flex', 'hidden');
-    }
+      function showAddCategoryModal() {
+        document.getElementById("categoryForm").reset();
+        document.getElementById("categoryId").value = "";
+        document.getElementById("categoryModalTitle").innerText =
+          "Tambah Kategori";
+        document
+          .getElementById("categoryModal")
+          .classList.replace("hidden", "flex");
+      }
+      function closeCategoryModal() {
+        document
+          .getElementById("categoryModal")
+          .classList.replace("flex", "hidden");
+      }
 
-    async function editCategory(id) {
+      async function editCategory(id) {
         try {
-            const result   = await apiCall('admin-categories', 'GET');
-            const category = result.data.find(c => c.id === id);
-            if (category) {
-                document.getElementById('categoryId').value      = category.id;
-                document.getElementById('nama_kategori').value   = category.nama_kategori;
-                document.getElementById('cat_deskripsi').value   = category.deskripsi || '';
-                document.getElementById('categoryModalTitle').innerText = 'Edit Kategori';
-                document.getElementById('categoryModal').classList.replace('hidden', 'flex');
-            }
-        } catch (e) { Swal.fire('Error', e.message, 'error'); }
-    }
+          const result = await apiCall("admin-categories", "GET");
+          const category = result.data.find((c) => c.id === id);
+          if (category) {
+            document.getElementById("categoryId").value = category.id;
+            document.getElementById("nama_kategori").value =
+              category.nama_kategori;
+            document.getElementById("cat_deskripsi").value =
+              category.deskripsi || "";
+            document.getElementById("categoryModalTitle").innerText =
+              "Edit Kategori";
+            document
+              .getElementById("categoryModal")
+              .classList.replace("hidden", "flex");
+          }
+        } catch (e) {
+          Swal.fire("Error", e.message, "error");
+        }
+      }
 
-    async function deleteCategory(id) {
+      async function deleteCategory(id) {
         const conf = await Swal.fire({
-            title: 'Yakin hapus?', text: 'Kategori yang memiliki produk tidak bisa dihapus!',
-            icon: 'warning', showCancelButton: true,
-            confirmButtonColor: '#DC2626', confirmButtonText: 'Ya, hapus!'
+          title: "Yakin hapus?",
+          text: "Kategori yang memiliki produk tidak bisa dihapus!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DC2626",
+          confirmButtonText: "Ya, hapus!",
         });
         if (conf.isConfirmed) {
-            try {
-                const result = await apiCall('admin-categories', 'DELETE', { id });
-                if (result.error) throw new Error(result.error);
-                Swal.fire('Terhapus!', 'Kategori berhasil dihapus.', 'success');
-                loadCategoriesList(); loadCategories();
-            } catch (e) { Swal.fire('Error', e.message, 'error'); }
-        }
-    }
-
-    document.getElementById('categoryForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id            = document.getElementById('categoryId').value;
-        const nama_kategori = document.getElementById('nama_kategori').value;
-        const deskripsi     = document.getElementById('cat_deskripsi').value;
-        try {
-            const result = id
-                ? await apiCall('admin-categories', 'PUT',  { id, nama_kategori, deskripsi })
-                : await apiCall('admin-categories', 'POST', { nama_kategori, deskripsi });
+          try {
+            const result = await apiCall("admin-categories", "DELETE", { id });
             if (result.error) throw new Error(result.error);
-            Swal.fire('Sukses', id ? 'Kategori diupdate!' : 'Kategori ditambahkan!', 'success');
-            closeCategoryModal(); loadCategoriesList(); loadCategories();
-        } catch (e) { Swal.fire('Error', e.message, 'error'); }
-    });
+            Swal.fire("Terhapus!", "Kategori berhasil dihapus.", "success");
+            loadCategoriesList();
+            loadCategories();
+          } catch (e) {
+            Swal.fire("Error", e.message, "error");
+          }
+        }
+      }
 
-    // ══════════════════════ PRODUK ════════════════════════════════════════
+      document
+        .getElementById("categoryForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const id = document.getElementById("categoryId").value;
+          const nama_kategori = document.getElementById("nama_kategori").value;
+          const deskripsi = document.getElementById("cat_deskripsi").value;
+          try {
+            const result = id
+              ? await apiCall("admin-categories", "PUT", {
+                  id,
+                  nama_kategori,
+                  deskripsi,
+                })
+              : await apiCall("admin-categories", "POST", {
+                  nama_kategori,
+                  deskripsi,
+                });
+            if (result.error) throw new Error(result.error);
+            Swal.fire(
+              "Sukses",
+              id ? "Kategori diupdate!" : "Kategori ditambahkan!",
+              "success",
+            );
+            closeCategoryModal();
+            loadCategoriesList();
+            loadCategories();
+          } catch (e) {
+            Swal.fire("Error", e.message, "error");
+          }
+        });
 
-    // State paginasi admin
-    let adminCurrentPage = 1;
-    let adminTotalPages  = 1;
-    let adminSearchTimeout = null;
+      // ══════════════════════ PRODUK ════════════════════════════════════════
 
-    function getAdminFilters() {
+      let adminCurrentPage = 1;
+      let adminTotalPages = 1;
+      let adminSearchTimeout = null;
+
+      function getAdminFilters() {
         return {
-            search:   document.getElementById('adminSearch').value.trim(),
-            kategori: document.getElementById('adminKategori').value,
-            featured: document.getElementById('adminFeatured').value,
-            limit:    parseInt(document.getElementById('adminLimit').value)
+          search: document.getElementById("adminSearch").value.trim(),
+          kategori: document.getElementById("adminKategori").value,
+          featured: document.getElementById("adminFeatured").value,
+          limit: parseInt(document.getElementById("adminLimit").value),
         };
-    }
+      }
 
-    function resetAdminFilter() {
-        document.getElementById('adminSearch').value   = '';
-        document.getElementById('adminKategori').value = 'all';
-        document.getElementById('adminFeatured').value = '';
-        document.getElementById('adminLimit').value    = '20';
+      function resetAdminFilter() {
+        document.getElementById("adminSearch").value = "";
+        document.getElementById("adminKategori").value = "all";
+        document.getElementById("adminFeatured").value = "";
+        document.getElementById("adminLimit").value = "20";
         adminCurrentPage = 1;
         loadProducts(1);
-    }
+      }
 
-    async function loadProducts(page = 1) {
-        const container = document.getElementById('productsContainer');
-        container.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';
-        document.getElementById('adminPaginationWrapper').classList.add('hidden');
+      async function loadProducts(page = 1) {
+        const container = document.getElementById("productsContainer");
+        container.innerHTML =
+          '<div class="text-center py-10"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';
+        document
+          .getElementById("adminPaginationWrapper")
+          .classList.add("hidden");
 
         const { search, kategori, featured, limit } = getAdminFilters();
-        const params = new URLSearchParams({ page, limit, search, kategori, featured });
+        const params = new URLSearchParams({
+          page,
+          limit,
+          search,
+          kategori,
+          featured,
+        });
 
         try {
-            const res    = await fetch(`/.netlify/functions/admin-products?${params}`);
-            const result = await res.json();
-            if (result.error) throw new Error(result.error);
+          const res = await fetch(
+            `/.netlify/functions/admin-products?${params}`,
+          );
+          const result = await res.json();
+          if (result.error) throw new Error(result.error);
 
-            const products   = result.data || [];
-            const pagination = result.pagination;
+          const products = result.data || [];
+          const pagination = result.pagination;
 
-            adminCurrentPage = pagination.page;
-            adminTotalPages  = pagination.totalPages;
+          adminCurrentPage = pagination.page;
+          adminTotalPages = pagination.totalPages;
 
-            const from = (pagination.page - 1) * pagination.limit + 1;
-            const to   = Math.min(pagination.page * pagination.limit, pagination.total);
-            document.getElementById('adminProductCount').innerText =
-                pagination.total > 0
-                    ? `Menampilkan ${from}–${to} dari ${pagination.total} produk`
-                    : '0 produk ditemukan';
+          const from = (pagination.page - 1) * pagination.limit + 1;
+          const to = Math.min(
+            pagination.page * pagination.limit,
+            pagination.total,
+          );
+          document.getElementById("adminProductCount").innerText =
+            pagination.total > 0
+              ? `Menampilkan ${from}–${to} dari ${pagination.total} produk`
+              : "0 produk ditemukan";
 
-            if (products.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-muted">Tidak ada produk yang sesuai filter.</div>';
-                return;
-            }
+          if (products.length === 0) {
+            container.innerHTML =
+              '<div class="text-center py-10 text-muted">Tidak ada produk yang sesuai filter.</div>';
+            return;
+          }
 
-            const catMap = {};
-            categoriesList.forEach(cat => { catMap[cat.id] = cat.nama_kategori; });
+          const catMap = {};
+          categoriesList.forEach((cat) => {
+            catMap[cat.id] = cat.nama_kategori;
+          });
 
-            container.innerHTML = `
+          container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="table-wrapper">
                         <table class="min-w-full divide-y divide-gray-200">
@@ -592,211 +965,304 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
-                                ${products.map(p => `
+                                ${products
+                                  .map(
+                                    (p) => `
                                     <tr class="hover:bg-soft">
                                         <td class="px-4 py-3">
-                                            ${p.gambar_url
+                                            ${
+                                              p.gambar_url
                                                 ? `<img src="${escapeHtml(p.gambar_url)}" class="h-10 w-10 object-cover rounded">`
-                                                : '<i class="fas fa-image text-muted text-xl"></i>'}
+                                                : '<i class="fas fa-image text-muted text-xl"></i>'
+                                            }
                                         </td>
                                         <td class="px-4 py-3 font-medium">${escapeHtml(p.nama)}</td>
-                                        <td class="px-4 py-3 text-sm">${escapeHtml(catMap[p.kategori_id] || '-')}</td>
-                                        <td class="px-4 py-3 text-sm">Rp ${p.harga.toLocaleString('id-ID')}</td>
+                                        <td class="px-4 py-3 text-sm">${escapeHtml(catMap[p.kategori_id] || "-")}</td>
+                                        <td class="px-4 py-3 text-sm">Rp ${p.harga.toLocaleString("id-ID")}</td>
                                         <td class="px-4 py-3">
-                                            ${p.is_featured
+                                            ${
+                                              p.is_featured
                                                 ? '<span class="badge-featured"><i class="fas fa-star"></i> Unggulan</span>'
-                                                : '<span class="badge-not-featured">—</span>'}
+                                                : '<span class="badge-not-featured">—</span>'
+                                            }
                                         </td>
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <button onclick="editProduct(${p.id})" class="action-edit mr-3 text-sm"><i class="fas fa-edit"></i> Edit</button>
                                             <button onclick="deleteProduct(${p.id})" class="action-delete text-sm"><i class="fas fa-trash"></i> Hapus</button>
                                         </td>
                                     </tr>
-                                `).join('')}
+                                `,
+                                  )
+                                  .join("")}
                             </tbody>
                         </table>
                     </div>
                 </div>`;
 
-            renderAdminPagination(pagination);
-
+          renderAdminPagination(pagination);
         } catch (e) {
-            container.innerHTML = `<div class="text-center py-10 text-red-500">Error: ${e.message}</div>`;
+          container.innerHTML = `<div class="text-center py-10 text-red-500">Error: ${e.message}</div>`;
         }
-    }
+      }
 
-    function renderAdminPagination(pagination) {
-        const wrapper  = document.getElementById('adminPaginationWrapper');
-        const controls = document.getElementById('adminPaginationControls');
-        const info     = document.getElementById('adminPaginationInfo');
-        if (pagination.totalPages <= 1) { wrapper.classList.add('hidden'); return; }
-        wrapper.classList.remove('hidden');
+      function renderAdminPagination(pagination) {
+        const wrapper = document.getElementById("adminPaginationWrapper");
+        const controls = document.getElementById("adminPaginationControls");
+        const info = document.getElementById("adminPaginationInfo");
+        if (pagination.totalPages <= 1) {
+          wrapper.classList.add("hidden");
+          return;
+        }
+        wrapper.classList.remove("hidden");
         info.textContent = `Halaman ${pagination.page} dari ${pagination.totalPages}`;
-        controls.innerHTML = '';
+        controls.innerHTML = "";
 
-        const prevBtn = makePageBtn('‹ Sebelumnya', !pagination.hasPrev);
-        prevBtn.addEventListener('click', () => goAdminPage(adminCurrentPage - 1));
+        const prevBtn = makePageBtn("‹ Sebelumnya", !pagination.hasPrev);
+        prevBtn.addEventListener("click", () =>
+          goAdminPage(adminCurrentPage - 1),
+        );
         controls.appendChild(prevBtn);
 
-        buildPageList(pagination.page, pagination.totalPages).forEach(p => {
-            if (p === '…') {
-                const el = makePageBtn('…');
-                el.style.cssText = 'border:none;background:transparent;cursor:default;pointer-events:none';
-                controls.appendChild(el);
-            } else {
-                const el = makePageBtn(p, false, p === adminCurrentPage);
-                el.addEventListener('click', () => goAdminPage(p));
-                controls.appendChild(el);
-            }
+        buildPageList(pagination.page, pagination.totalPages).forEach((p) => {
+          if (p === "…") {
+            const el = makePageBtn("…");
+            el.style.cssText =
+              "border:none;background:transparent;cursor:default;pointer-events:none";
+            controls.appendChild(el);
+          } else {
+            const el = makePageBtn(p, false, p === adminCurrentPage);
+            el.addEventListener("click", () => goAdminPage(p));
+            controls.appendChild(el);
+          }
         });
 
-        const nextBtn = makePageBtn('Berikutnya ›', !pagination.hasNext);
-        nextBtn.addEventListener('click', () => goAdminPage(adminCurrentPage + 1));
+        const nextBtn = makePageBtn("Berikutnya ›", !pagination.hasNext);
+        nextBtn.addEventListener("click", () =>
+          goAdminPage(adminCurrentPage + 1),
+        );
         controls.appendChild(nextBtn);
-    }
+      }
 
-    function makePageBtn(label, disabled = false, active = false) {
-        const el = document.createElement('button');
-        el.className   = 'pagination-btn';
+      function makePageBtn(label, disabled = false, active = false) {
+        const el = document.createElement("button");
+        el.className = "pagination-btn";
         el.textContent = label;
-        el.disabled    = disabled;
-        if (active) el.classList.add('active');
+        el.disabled = disabled;
+        if (active) el.classList.add("active");
         return el;
-    }
+      }
 
-    function buildPageList(current, total) {
+      function buildPageList(current, total) {
         if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-        const pages  = new Set([1, total, current, current - 1, current + 1]);
-        const sorted = [...pages].filter(p => p >= 1 && p <= total).sort((a, b) => a - b);
-        const result = []; let prev = 0;
-        for (const p of sorted) { if (p - prev > 1) result.push('…'); result.push(p); prev = p; }
+        const pages = new Set([1, total, current, current - 1, current + 1]);
+        const sorted = [...pages]
+          .filter((p) => p >= 1 && p <= total)
+          .sort((a, b) => a - b);
+        const result = [];
+        let prev = 0;
+        for (const p of sorted) {
+          if (p - prev > 1) result.push("…");
+          result.push(p);
+          prev = p;
+        }
         return result;
-    }
+      }
 
-    function goAdminPage(page) {
-        if (page < 1 || page > adminTotalPages || page === adminCurrentPage) return;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      function goAdminPage(page) {
+        if (page < 1 || page > adminTotalPages || page === adminCurrentPage)
+          return;
+        window.scrollTo({ top: 0, behavior: "smooth" });
         loadProducts(page);
-    }
+      }
 
-
-    async function uploadImage(file) {
+      async function uploadImage(file) {
         return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = async () => {
-                try {
-                    const fileExt  = file.name.split('.').pop();
-                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-                    const result   = await apiCall('upload-image', 'POST', { file: reader.result, fileName, fileType: file.type });
-                    if (result.error) throw new Error(result.error);
-                    resolve(result.url);
-                } catch (e) { reject(e); }
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    function showAddProductModal() {
-        document.getElementById('productForm').reset();
-        document.getElementById('productId').value     = '';
-        document.getElementById('is_featured').checked = false;
-        document.getElementById('currentImage').classList.add('hidden');
-        document.getElementById('productModalTitle').innerText = 'Tambah Produk';
-        document.getElementById('productModal').classList.remove('hidden');
-        document.getElementById('productModal').classList.add('flex');
-    }
-
-    function closeProductModal() {
-        document.getElementById('productModal').classList.remove('flex');
-        document.getElementById('productModal').classList.add('hidden');
-    }
-
-    async function editProduct(id) {
-        try {
-            const res    = await fetch(`/.netlify/functions/admin-products?id=${id}`);
-            const result = await res.json();
-            const product = Array.isArray(result.data) ? result.data[0] : result.data;
-            if (!product) throw new Error('Produk tidak ditemukan');
-
-            document.getElementById('productId').value      = product.id;
-            document.getElementById('nama').value           = product.nama;
-            document.getElementById('kategori_id').value    = product.kategori_id || '';
-            document.getElementById('harga').value          = product.harga;
-            document.getElementById('deskripsi').value      = product.deskripsi || '';
-            document.getElementById('is_featured').checked  = !!product.is_featured;
-
-            if (product.gambar_url) {
-                document.getElementById('currentImagePreview').src = product.gambar_url;
-                document.getElementById('currentImage').classList.remove('hidden');
-            } else {
-                document.getElementById('currentImage').classList.add('hidden');
+          const reader = new FileReader();
+          reader.onloadend = async () => {
+            try {
+              const fileExt = file.name.split(".").pop();
+              const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+              const result = await apiCall("upload-image", "POST", {
+                file: reader.result,
+                fileName,
+                fileType: file.type,
+              });
+              if (result.error) throw new Error(result.error);
+              resolve(result.url);
+            } catch (e) {
+              reject(e);
             }
-            document.getElementById('productModalTitle').innerText = 'Edit Produk';
-            document.getElementById('productModal').classList.remove('hidden'); document.getElementById('productModal').classList.add('flex');
-        } catch (e) { Swal.fire('Error', e.message, 'error'); }
-    }
+          };
+          reader.readAsDataURL(file);
+        });
+      }
 
-    async function deleteProduct(id) {
+      function showAddProductModal() {
+        document.getElementById("productForm").reset();
+        document.getElementById("productId").value = "";
+        document.getElementById("is_featured").checked = false;
+        document.getElementById("currentImage").classList.add("hidden");
+        document.getElementById("productModalTitle").innerText =
+          "Tambah Produk";
+
+        // ★ Kosongkan Quill editor
+        quill.setContents([]);
+
+        document.getElementById("productModal").classList.remove("hidden");
+        document.getElementById("productModal").classList.add("flex");
+      }
+
+      function closeProductModal() {
+        document.getElementById("productModal").classList.remove("flex");
+        document.getElementById("productModal").classList.add("hidden");
+      }
+
+      async function editProduct(id) {
+        try {
+          const res = await fetch(
+            `/.netlify/functions/admin-products?id=${id}`,
+          );
+          const result = await res.json();
+          const product = Array.isArray(result.data)
+            ? result.data[0]
+            : result.data;
+          if (!product) throw new Error("Produk tidak ditemukan");
+
+          document.getElementById("productId").value = product.id;
+          document.getElementById("nama").value = product.nama;
+          document.getElementById("kategori_id").value =
+            product.kategori_id || "";
+          document.getElementById("harga").value = product.harga;
+          document.getElementById("is_featured").checked =
+            !!product.is_featured;
+
+          // ★ Isi Quill dengan HTML deskripsi yang tersimpan
+          quill.clipboard.dangerouslyPasteHTML(product.deskripsi || "");
+
+          if (product.gambar_url) {
+            document.getElementById("currentImagePreview").src =
+              product.gambar_url;
+            document.getElementById("currentImage").classList.remove("hidden");
+          } else {
+            document.getElementById("currentImage").classList.add("hidden");
+          }
+
+          document.getElementById("productModalTitle").innerText =
+            "Edit Produk";
+          document.getElementById("productModal").classList.remove("hidden");
+          document.getElementById("productModal").classList.add("flex");
+        } catch (e) {
+          Swal.fire("Error", e.message, "error");
+        }
+      }
+
+      async function deleteProduct(id) {
         const conf = await Swal.fire({
-            title: 'Yakin hapus?', text: 'Produk akan dihapus permanen!',
-            icon: 'warning', showCancelButton: true,
-            confirmButtonColor: '#DC2626', confirmButtonText: 'Ya, hapus!'
+          title: "Yakin hapus?",
+          text: "Produk akan dihapus permanen!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DC2626",
+          confirmButtonText: "Ya, hapus!",
         });
         if (conf.isConfirmed) {
-            try {
-                const result = await apiCall('admin-products', 'DELETE', { id });
-                if (result.error) throw new Error(result.error);
-                Swal.fire('Terhapus!', 'Produk berhasil dihapus.', 'success');
-                loadProducts(adminCurrentPage);
-            } catch (e) { Swal.fire('Error', e.message, 'error'); }
+          try {
+            const result = await apiCall("admin-products", "DELETE", { id });
+            if (result.error) throw new Error(result.error);
+            Swal.fire("Terhapus!", "Produk berhasil dihapus.", "success");
+            loadProducts(adminCurrentPage);
+          } catch (e) {
+            Swal.fire("Error", e.message, "error");
+          }
         }
-    }
+      }
 
+      document
+        .getElementById("productForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const id = document.getElementById("productId").value;
+          const nama = document.getElementById("nama").value;
+          const kategori_id = parseInt(
+            document.getElementById("kategori_id").value,
+          );
+          const harga = parseInt(document.getElementById("harga").value);
+          const is_featured = document.getElementById("is_featured").checked;
+          const gambarFile = document.getElementById("gambar").files[0];
 
-    document.getElementById('productForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id          = document.getElementById('productId').value;
-        const nama        = document.getElementById('nama').value;
-        const kategori_id = parseInt(document.getElementById('kategori_id').value);
-        const harga       = parseInt(document.getElementById('harga').value);
-        const deskripsi   = document.getElementById('deskripsi').value;
-        const is_featured = document.getElementById('is_featured').checked;   // ★ ambil nilai toggle
-        const gambarFile  = document.getElementById('gambar').files[0];
+          // ★ Ambil HTML dari Quill — simpan null jika editor kosong
+          const deskripsi = quillIsEmpty() ? null : quill.root.innerHTML;
 
-        try {
-            let gambarUrl = document.getElementById('currentImagePreview').src || null;
-            // Kalau src adalah URL halaman itu sendiri (belum ada gambar), reset ke null
-            if (gambarUrl && !gambarUrl.startsWith('http')) gambarUrl = null;
+          try {
+            let gambarUrl =
+              document.getElementById("currentImagePreview").src || null;
+            if (gambarUrl && !gambarUrl.startsWith("http")) gambarUrl = null;
 
             if (gambarFile) {
-                Swal.fire({ title: 'Uploading...', text: 'Mengupload gambar...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-                gambarUrl = await uploadImage(gambarFile);
-                Swal.close();
+              Swal.fire({
+                title: "Uploading...",
+                text: "Mengupload gambar...",
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading(),
+              });
+              gambarUrl = await uploadImage(gambarFile);
+              Swal.close();
             }
 
-            // ★ is_featured ikut dikirim ke admin-products
-            const productData = { nama, kategori_id, harga, deskripsi, is_featured, gambar_url: gambarUrl || null };
+            const productData = {
+              nama,
+              kategori_id,
+              harga,
+              deskripsi,
+              is_featured,
+              gambar_url: gambarUrl || null,
+            };
 
             const result = id
-                ? await apiCall('admin-products', 'PUT',  { id: parseInt(id), ...productData })
-                : await apiCall('admin-products', 'POST', productData);
+              ? await apiCall("admin-products", "PUT", {
+                  id: parseInt(id),
+                  ...productData,
+                })
+              : await apiCall("admin-products", "POST", productData);
 
             if (result.error) throw new Error(result.error);
 
-            Swal.fire('Sukses', id ? 'Produk diupdate!' : 'Produk ditambahkan!', 'success');
+            Swal.fire(
+              "Sukses",
+              id ? "Produk diupdate!" : "Produk ditambahkan!",
+              "success",
+            );
             closeProductModal();
-            loadProducts();
-        } catch (e) { Swal.fire('Error', e.message, 'error'); }
-    });
+            loadProducts(adminCurrentPage);
+          } catch (e) {
+            Swal.fire("Error", e.message, "error");
+          }
+        });
 
-    // ── Event listeners filter produk ─────────────────────────────────────
-    document.getElementById('adminSearch').addEventListener('input', () => {
+      // ── Event listeners filter ─────────────────────────────────────────────
+      document.getElementById("adminSearch").addEventListener("input", () => {
         clearTimeout(adminSearchTimeout);
-        adminSearchTimeout = setTimeout(() => { adminCurrentPage = 1; loadProducts(1); }, 400);
-    });
-    document.getElementById('adminKategori').addEventListener('change', () => { adminCurrentPage = 1; loadProducts(1); });
-    document.getElementById('adminFeatured').addEventListener('change', () => { adminCurrentPage = 1; loadProducts(1); });
-    document.getElementById('adminLimit').addEventListener('change',    () => { adminCurrentPage = 1; loadProducts(1); });
-</script>
-</body>
+        adminSearchTimeout = setTimeout(() => {
+          adminCurrentPage = 1;
+          loadProducts(1);
+        }, 400);
+      });
+      document
+        .getElementById("adminKategori")
+        .addEventListener("change", () => {
+          adminCurrentPage = 1;
+          loadProducts(1);
+        });
+      document
+        .getElementById("adminFeatured")
+        .addEventListener("change", () => {
+          adminCurrentPage = 1;
+          loadProducts(1);
+        });
+      document.getElementById("adminLimit").addEventListener("change", () => {
+        adminCurrentPage = 1;
+        loadProducts(1);
+      });
+    </script>
+  </body>
 </html>

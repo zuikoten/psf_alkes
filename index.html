@@ -193,9 +193,15 @@
             return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
         }
 
+        function stripHtml(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html || '';
+            return tmp.textContent || tmp.innerText || '';
+        }
+
         function productCard(p, showBadge = false) {
             return `
-                <div class="product-card rounded-xl overflow-hidden">
+                <a href="produk.html?id=${p.id}" class="product-card rounded-xl overflow-hidden block">
                     <div class="h-48 bg-soft flex items-center justify-center">
                         ${p.gambar_url
                             ? `<img src="${escapeHtml(p.gambar_url)}" alt="${escapeHtml(p.nama)}" class="w-full h-full object-cover">`
@@ -207,14 +213,14 @@
                             ${showBadge ? '<span class="badge-new shrink-0">Baru</span>' : ''}
                         </div>
                         <p class="product-price font-bold text-xl mt-2">Rp ${p.harga.toLocaleString('id-ID')}</p>
-                        <p class="text-sm text-muted mt-1 line-clamp-2">${escapeHtml(p.deskripsi || 'Produk alat kesehatan berkualitas')}</p>
-                        <button onclick='orderViaWhatsApp(${JSON.stringify(p.nama)}, ${p.harga})'
+                        <p class="text-sm text-muted mt-1 line-clamp-2">${escapeHtml(stripHtml(p.deskripsi) || 'Produk alat kesehatan berkualitas')}</p>
+                        <button onclick='event.stopPropagation(); orderViaWhatsApp(${JSON.stringify(p.nama)}, ${p.harga})'
                                 class="btn-whatsapp mt-4 w-full font-semibold py-2 rounded-lg flex items-center justify-center space-x-2">
                             <i class="fab fa-whatsapp"></i>
                             <span>Beli via WhatsApp</span>
                         </button>
                     </div>
-                </div>
+                </a>
             `;
         }
 

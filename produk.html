@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Produk - PSF Alkes</title>
+    <meta name="description" content="Detail produk alat kesehatan PSF Alkes">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --color-primary:        #1565C0;
+            --color-primary-dark:   #0D47A1;
+            --color-secondary:      #4A9FE8;
+            --color-light:          #90CAF9;
+            --color-soft:           #E3F2FD;
+            --color-text-muted:     #6B7280;
+            --color-bg-page:        #F5F9FF;
+            --color-white:          #FFFFFF;
+        }
+
+        body                { background-color: var(--color-bg-page); }
+
+        /* Navbar */
+        .navbar             { background: var(--color-white); box-shadow: 0 2px 8px rgba(21,101,192,0.1); }
+        .navbar-brand       { color: var(--color-primary); font-weight: 700; }
+        .navbar-icon        { color: var(--color-secondary); }
+        .nav-link           { color: var(--color-text-muted); transition: color 0.2s; }
+        .nav-link:hover     { color: var(--color-primary); }
+
+        /* Breadcrumb */
+        .breadcrumb-link    { color: var(--color-secondary); }
+        .breadcrumb-link:hover { color: var(--color-primary); text-decoration: underline; }
+
+        /* Gambar produk */
+        .product-image-wrap {
+            background: var(--color-soft);
+            border-radius: 1rem;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .product-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            cursor: zoom-in;
+            transition: transform 0.3s;
+        }
+        .product-image-wrap img:hover { transform: scale(1.03); }
+
+        /* Info panel */
+        .info-card {
+            background: var(--color-white);
+            border: 1px solid var(--color-soft);
+            border-radius: 1rem;
+            padding: 1.75rem;
+        }
+        .product-price      { color: var(--color-primary); }
+        .category-badge {
+            background: var(--color-soft);
+            color: var(--color-primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 9999px;
+        }
+
+        /* Deskripsi rich text */
+        .rich-content       { color: #374151; line-height: 1.75; }
+        .rich-content h1,
+        .rich-content h2,
+        .rich-content h3    { font-weight: 700; color: #1F2937; margin: 1rem 0 0.5rem; }
+        .rich-content h1    { font-size: 1.4rem; }
+        .rich-content h2    { font-size: 1.2rem; }
+        .rich-content h3    { font-size: 1.05rem; }
+        .rich-content p     { margin-bottom: 0.75rem; }
+        .rich-content ul,
+        .rich-content ol    { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .rich-content ul    { list-style: disc; }
+        .rich-content ol    { list-style: decimal; }
+        .rich-content li    { margin-bottom: 0.25rem; }
+        .rich-content strong { font-weight: 700; }
+        .rich-content em    { font-style: italic; }
+        .rich-content table {
+            width: 100%; border-collapse: collapse;
+            margin-bottom: 1rem; font-size: 0.9rem;
+        }
+        .rich-content th,
+        .rich-content td    { border: 1px solid #E5E7EB; padding: 0.5rem 0.75rem; text-align: left; }
+        .rich-content th    { background: var(--color-soft); font-weight: 600; color: var(--color-primary); }
+        .rich-content tr:nth-child(even) td { background: #F9FAFB; }
+
+        /* Tombol WA */
+        .btn-whatsapp {
+            background: #25D366; color: var(--color-white);
+            transition: background 0.2s; font-weight: 700;
+        }
+        .btn-whatsapp:hover { background: #1EBE5A; }
+
+        /* Tombol kembali */
+        .btn-back {
+            color: var(--color-primary);
+            border: 1px solid var(--color-light);
+            background: var(--color-white);
+            transition: background 0.2s;
+        }
+        .btn-back:hover     { background: var(--color-soft); }
+
+        /* Lightbox overlay */
+        #lightbox {
+            display: none;
+            position: fixed; inset: 0; z-index: 999;
+            background: rgba(0,0,0,0.85);
+            align-items: center; justify-content: center;
+            cursor: zoom-out;
+        }
+        #lightbox.open      { display: flex; }
+        #lightbox img       { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 0.5rem; }
+
+        /* Footer */
+        .footer             { background-color: var(--color-primary-dark, #0D47A1); }
+        .footer-sub         { color: var(--color-light); }
+
+        /* Skeleton loading */
+        .skeleton {
+            background: linear-gradient(90deg, #e0eaf6 25%, #c8d9f0 50%, #e0eaf6 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 0.5rem;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-hospital-user text-2xl navbar-icon"></i>
+                <span class="text-2xl navbar-brand">PSF Alkes</span>
+            </div>
+            <div class="flex space-x-4">
+                <a href="index.html" class="nav-link">Beranda</a>
+                <a href="katalog_produk.html" class="nav-link">Katalog</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Konten utama -->
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+
+        <!-- Breadcrumb -->
+        <nav class="text-sm mb-6" style="color: var(--color-text-muted);">
+            <a href="index.html" class="breadcrumb-link">Beranda</a>
+            <span class="mx-2">›</span>
+            <a href="katalog_produk.html" class="breadcrumb-link">Katalog</a>
+            <span class="mx-2">›</span>
+            <span id="breadcrumb-nama">Memuat...</span>
+        </nav>
+
+        <!-- Error state -->
+        <div id="error-state" class="hidden text-center py-20">
+            <i class="fas fa-exclamation-circle text-5xl" style="color: var(--color-secondary)"></i>
+            <p class="mt-4 text-lg font-semibold text-gray-700">Produk tidak ditemukan</p>
+            <p class="text-sm mt-1" style="color: var(--color-text-muted)">Produk mungkin sudah dihapus atau URL tidak valid.</p>
+            <a href="katalog_produk.html" class="btn-back inline-flex items-center gap-2 mt-6 px-6 py-2 rounded-full text-sm font-semibold">
+                <i class="fas fa-arrow-left"></i> Kembali ke Katalog
+            </a>
+        </div>
+
+        <!-- Skeleton loading -->
+        <div id="skeleton-state">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="skeleton" style="aspect-ratio:1/1; border-radius:1rem;"></div>
+                <div class="space-y-4 pt-2">
+                    <div class="skeleton h-5 w-24"></div>
+                    <div class="skeleton h-8 w-3/4"></div>
+                    <div class="skeleton h-10 w-1/2"></div>
+                    <div class="skeleton h-4 w-full"></div>
+                    <div class="skeleton h-4 w-5/6"></div>
+                    <div class="skeleton h-12 w-full mt-4" style="border-radius:0.5rem;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Konten produk -->
+        <div id="product-content" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+
+                <!-- Gambar -->
+                <div>
+                    <div class="product-image-wrap" id="image-wrap">
+                        <i class="fas fa-medkit text-8xl" style="color: var(--color-light)"></i>
+                    </div>
+                </div>
+
+                <!-- Info panel -->
+                <div class="info-card">
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <span id="product-kategori" class="category-badge hidden"></span>
+                    </div>
+
+                    <h1 id="product-nama" class="text-2xl md:text-3xl font-bold text-gray-800 mb-3"></h1>
+
+                    <p id="product-harga" class="product-price text-3xl font-bold mb-6"></p>
+
+                    <!-- Tombol WA -->
+                    <button id="btn-wa"
+                            class="btn-whatsapp w-full py-3 rounded-xl flex items-center justify-center gap-2 text-lg mb-4">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                        <span>Beli via WhatsApp</span>
+                    </button>
+
+                    <!-- Tombol kembali -->
+                    <a href="katalog_produk.html"
+                       class="btn-back w-full py-2.5 rounded-xl flex items-center justify-center gap-2 text-sm font-semibold">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Kembali ke Katalog</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Deskripsi / Spesifikasi -->
+            <div id="deskripsi-section" class="mt-10 hidden">
+                <div class="info-card">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 pb-3"
+                        style="border-bottom: 2px solid var(--color-soft);">
+                        <i class="fas fa-align-left mr-2" style="color: var(--color-secondary)"></i>
+                        Deskripsi & Spesifikasi
+                    </h2>
+                    <div id="product-deskripsi" class="rich-content"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Gambar produk diperbesar">
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-white py-8 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <p class="font-semibold">&copy; 2026 PSF Alkes - Toko Alat Kesehatan Terpercaya</p>
+            <p class="text-sm footer-sub mt-1">Melayani kebutuhan medis rumah sakit, klinik, dan pribadi</p>
+            <div class="border-t border-blue-700 mt-4 pt-4">
+                <p class="text-sm footer-sub">part of <span class="font-semibold text-white">Group of PT. Hatamed Industri Utama</span></p>
+                <p class="text-xs footer-sub mt-1">Izin Kemenkes RI &middot; AKD 21603129105</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const PHONE = '62811537138'; // GANTI: nomor WhatsApp utama untuk pemesanan
+
+        // ── Ambil id dari URL ──────────────────────────────────────────────
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id'));
+
+        function showError() {
+            document.getElementById('skeleton-state').classList.add('hidden');
+            document.getElementById('error-state').classList.remove('hidden');
+        }
+
+        function stripHtml(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
+        }
+
+        // ── Lightbox ───────────────────────────────────────────────────────
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+        // ── Load produk ────────────────────────────────────────────────────
+        async function loadProduct() {
+            if (!productId || isNaN(productId)) { showError(); return; }
+
+            try {
+                const res  = await fetch(`/.netlify/functions/get-products?mode=detail&id=${productId}`);
+                const json = await res.json();
+
+                if (!json.success || !json.data) { showError(); return; }
+
+                const p = json.data;
+
+                // Update <title> dan meta
+                document.title = `${p.nama} - PSF Alkes`;
+
+                // Breadcrumb
+                document.getElementById('breadcrumb-nama').textContent = p.nama;
+
+                // Gambar
+                const imageWrap = document.getElementById('image-wrap');
+                if (p.gambar_url) {
+                    imageWrap.innerHTML = `<img src="${p.gambar_url}" alt="${p.nama}"
+                        onclick="openLightbox('${p.gambar_url}')"
+                        title="Klik untuk perbesar">`;
+                }
+
+                // Kategori badge
+                const katEl = document.getElementById('product-kategori');
+                const katNama = p.kategori?.nama_kategori;
+                if (katNama) {
+                    katEl.textContent = katNama;
+                    katEl.classList.remove('hidden');
+                }
+
+                // Nama & harga
+                document.getElementById('product-nama').textContent = p.nama;
+                document.getElementById('product-harga').textContent =
+                    'Rp ' + p.harga.toLocaleString('id-ID');
+
+                // Tombol WhatsApp
+                document.getElementById('btn-wa').addEventListener('click', () => {
+                    const msg = `Halo PSF Alkes,%0A%0ASaya ingin memesan:%0A*${encodeURIComponent(p.nama)}*%0AHarga: Rp ${p.harga.toLocaleString('id-ID')}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
+                    window.open(`https://wa.me/${PHONE}?text=${msg}`, '_blank');
+                });
+
+                // Deskripsi — cek apakah HTML atau plain text
+                if (p.deskripsi && p.deskripsi.trim()) {
+                    const isHtml = /<[a-z][\s\S]*>/i.test(p.deskripsi);
+                    const desEl  = document.getElementById('product-deskripsi');
+
+                    if (isHtml) {
+                        // Rich text dari Quill editor — render langsung
+                        desEl.innerHTML = p.deskripsi;
+                    } else {
+                        // Plain text lama — bungkus per baris jadi paragraf
+                        desEl.innerHTML = p.deskripsi
+                            .split('\n')
+                            .filter(l => l.trim())
+                            .map(l => `<p>${l}</p>`)
+                            .join('');
+                    }
+
+                    document.getElementById('deskripsi-section').classList.remove('hidden');
+                }
+
+                // Tampilkan konten, sembunyikan skeleton
+                document.getElementById('skeleton-state').classList.add('hidden');
+                document.getElementById('product-content').classList.remove('hidden');
+
+            } catch (err) {
+                console.error(err);
+                showError();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProduct);
+    </script>
+</body>
+</html>
