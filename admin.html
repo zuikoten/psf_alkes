@@ -7,63 +7,130 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-   <style>
-    .tab-active {
-        background-color: #1E4FA3;  /* biru utama */
-        color: white;
-    }
-    .modal { transition: all 0.3s ease; }
-    .table-wrapper { overflow-x: auto; }
+    <style>
+        /* =============================================
+           CSS VARIABLES — GANTI WARNA DI SINI
+        ============================================= */
+        :root {
+            --color-primary:        #1565C0;
+            --color-primary-dark:   #1C3F91;
+            --color-secondary:      #4A9FE8;
+            --color-light:          #90CAF9;
+            --color-soft:           #E3F2FD;
+            --color-text-primary:   #1E4FA3;
+            --color-text-muted:     #6B7280;
+            --color-bg-page:        #F5F9FF;
+            --color-white:          #FFFFFF;
+            --color-danger:         #DC2626;
+            --color-danger-dark:    #B91C1C;
+        }
 
-    .btn-primary {
-        background-color: #1E4FA3;
-        color: white;
-    }
-    .btn-primary:hover {
-        background-color: #1C3F91;
-    }
+        /* =============================================
+           UTILITY CLASSES
+        ============================================= */
+        body                    { background-color: var(--color-bg-page); }
 
-    .text-primary {
-        color: #1E4FA3;
-    }
+        .bg-primary             { background-color: var(--color-primary); }
+        .bg-primary-dark        { background-color: var(--color-primary-dark); }
+        .bg-secondary           { background-color: var(--color-secondary); }
+        .bg-light               { background-color: var(--color-light); }
+        .bg-soft                { background-color: var(--color-soft); }
 
-    .border-primary {
-        border-color: #1E4FA3;
-    }
+        .text-primary           { color: var(--color-text-primary); }
+        .text-muted             { color: var(--color-text-muted); }
 
-    .bg-primary {
-        background-color: #1E4FA3;
-    }
+        .border-primary         { border-color: var(--color-primary); }
 
-    .bg-secondary {
-        background-color: #3A73C5;
-    }
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover      { background-color: var(--color-primary-dark); }
 
-    .bg-light-blue {
-        background-color: #6FA3E6;
-    }
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: var(--color-white);
+            transition: background-color 0.2s;
+        }
+        .btn-secondary:hover    { background-color: var(--color-primary); }
 
-    .bg-soft {
-        background-color: #E6E6E6;
-    }
+        .btn-danger {
+            background-color: var(--color-danger);
+            color: var(--color-white);
+            transition: background-color 0.2s;
+        }
+        .btn-danger:hover       { background-color: var(--color-danger-dark); }
 
-    .hover\:bg-primary:hover {
-        background-color: #1E4FA3;
-    }
-</style>
+        /* Login screen gradient */
+        .login-bg {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        }
+
+        /* Navbar */
+        .navbar-icon            { color: var(--color-light); }
+        .navbar-title           { color: var(--color-white); }
+        .navbar                 { background-color: var(--color-primary); }
+
+        /* Tabs */
+        .tab-active {
+            background-color: var(--color-white);
+            color: var(--color-primary);
+            border-bottom: 3px solid var(--color-primary);
+            font-weight: 700;
+        }
+        .tab-inactive {
+            color: rgba(255,255,255,0.75);
+        }
+        .tab-inactive:hover     { color: var(--color-white); }
+        .tabs-bar               { background-color: var(--color-secondary); }
+
+        /* Page title */
+        .page-title             { color: var(--color-primary); }
+
+        /* Table action links */
+        .action-edit            { color: var(--color-secondary); }
+        .action-edit:hover      { color: var(--color-primary-dark); }
+        .action-delete          { color: var(--color-danger); }
+        .action-delete:hover    { color: var(--color-danger-dark); }
+
+        /* Modal */
+        .modal                  { transition: all 0.3s ease; }
+
+        /* Table */
+        .table-wrapper          { overflow-x: auto; }
+
+        /* Login accent */
+        .login-icon             { color: var(--color-light); }
+        .login-title            { color: var(--color-white); }
+        .login-subtitle         { color: rgba(255,255,255,0.7); }
+        .login-card             { background-color: var(--color-primary-dark); border: 1px solid rgba(255,255,255,0.15); }
+        .login-input {
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: var(--color-white);
+        }
+        .login-input::placeholder { color: rgba(255,255,255,0.5); }
+        .login-input:focus {
+            outline: none;
+            border-color: var(--color-light);
+            background-color: rgba(255,255,255,0.15);
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body>
 
 <!-- Login Screen -->
-<div id="loginScreen" class="min-h-screen flex items-center justify-center" style="background: linear-gradient(135deg, #2D5A27 0%, #4A7C3F 100%);">
-    <div class="bg-white rounded-lg shadow-xl p-8 w-96">
+<div id="loginScreen" class="min-h-screen flex items-center justify-center login-bg">
+    <div class="login-card rounded-xl shadow-2xl p-8 w-96">
         <div class="text-center mb-6">
-            <i class="fas fa-hospital-user text-5xl mb-2" style="color: #C5A028;"></i>
-            <h2 class="text-2xl font-bold" style="color: #2D5A27;">Admin Login</h2>
-            <p class="text-gray-500 text-sm">Masukkan password untuk mengakses dashboard</p>
+            <i class="fas fa-hospital-user text-5xl mb-3 login-icon"></i>
+            <h2 class="text-2xl font-bold login-title">Admin Login</h2>
+            <p class="text-sm mt-1 login-subtitle">Masukkan password untuk mengakses dashboard</p>
         </div>
-        <input type="password" id="passwordInput" placeholder="Password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas mb-4">
-        <button onclick="checkPassword()" class="w-full py-2 rounded-lg transition" style="background-color: #C5A028; color: white; hover:background-color: #A8861E;">
+        <input type="password" id="passwordInput" placeholder="Password" class="login-input w-full px-4 py-2 rounded-lg mb-4">
+        <button onclick="checkPassword()" class="btn-primary w-full py-2 rounded-lg">
             <i class="fas fa-sign-in-alt"></i> Login
         </button>
     </div>
@@ -71,26 +138,28 @@
 
 <!-- Main Admin Dashboard -->
 <div id="adminDashboard" style="display: none;">
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+
+    <!-- Navbar -->
+    <nav class="navbar shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap gap-2">
             <div class="flex items-center space-x-2">
-                <i class="fas fa-hospital-user text-2xl" style="color: #C5A028;"></i>
-                <span class="text-xl font-bold" style="color: #2D5A27;">PSF Alkes Admin</span>
+                <i class="fas fa-hospital-user text-2xl navbar-icon"></i>
+                <span class="text-xl font-bold navbar-title">PSF Alkes Admin</span>
             </div>
-            <button onclick="logout()" class="px-4 py-2 rounded-lg text-sm transition" style="background-color: #C5A028; color: white;">
+            <button onclick="logout()" class="btn-secondary px-4 py-2 rounded-lg text-sm">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
     </nav>
 
     <!-- Tabs -->
-    <div class="border-b border-gray-200 bg-white">
+    <div class="tabs-bar border-b border-blue-800">
         <div class="container mx-auto px-4">
-            <div class="flex gap-2">
+            <div class="flex gap-1">
                 <button id="tabProducts" onclick="switchTab('products')" class="tab-active px-6 py-3 font-semibold transition">
                     <i class="fas fa-boxes"></i> Produk
                 </button>
-                <button id="tabCategories" onclick="switchTab('categories')" class="px-6 py-3 font-semibold text-gray-600 hover:text-emas transition">
+                <button id="tabCategories" onclick="switchTab('categories')" class="tab-inactive px-6 py-3 font-semibold transition">
                     <i class="fas fa-tags"></i> Kategori
                 </button>
             </div>
@@ -98,29 +167,30 @@
     </div>
 
     <div class="container mx-auto px-4 py-8">
+
         <!-- Halaman Produk -->
         <div id="productsPanel">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-bold" style="color: #2D5A27;">Manajemen Produk</h1>
-                <button onclick="showAddProductModal()" class="px-4 py-2 rounded-lg transition" style="background-color: #4A7C3F; color: white;">
+                <h1 class="text-2xl font-bold page-title">Manajemen Produk</h1>
+                <button onclick="showAddProductModal()" class="btn-primary px-4 py-2 rounded-lg">
                     <i class="fas fa-plus"></i> Tambah Produk
                 </button>
             </div>
             <div id="productsContainer">
-                <div class="text-center py-10 text-gray-500">Memuat produk...</div>
+                <div class="text-center py-10 text-muted">Memuat produk...</div>
             </div>
         </div>
 
         <!-- Halaman Kategori -->
         <div id="categoriesPanel" style="display: none;">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-bold" style="color: #2D5A27;">Manajemen Kategori</h1>
-                <button onclick="showAddCategoryModal()" class="px-4 py-2 rounded-lg transition" style="background-color: #4A7C3F; color: white;">
+                <h1 class="text-2xl font-bold page-title">Manajemen Kategori</h1>
+                <button onclick="showAddCategoryModal()" class="btn-primary px-4 py-2 rounded-lg">
                     <i class="fas fa-plus"></i> Tambah Kategori
                 </button>
             </div>
             <div id="categoriesContainer">
-                <div class="text-center py-10 text-gray-500">Memuat kategori...</div>
+                <div class="text-center py-10 text-muted">Memuat kategori...</div>
             </div>
         </div>
     </div>
@@ -131,39 +201,39 @@
     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-screen overflow-y-auto">
         <div class="p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="productModalTitle" class="text-2xl font-bold" style="color: #2D5A27;">Tambah Produk</h2>
-                <button onclick="closeProductModal()" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
+                <h2 id="productModalTitle" class="text-2xl font-bold page-title">Tambah Produk</h2>
+                <button onclick="closeProductModal()" class="text-muted hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
             </div>
             <form id="productForm">
                 <input type="hidden" id="productId">
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Nama Produk *</label>
-                    <input type="text" id="nama" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas">
+                    <input type="text" id="nama" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-primary">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Kategori *</label>
-                    <select id="kategori_id" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas">
+                    <select id="kategori_id" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-primary">
                         <option value="">Pilih Kategori</option>
                     </select>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Harga (Rp) *</label>
-                    <input type="number" id="harga" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas">
+                    <input type="number" id="harga" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-primary">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
-                    <textarea id="deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas"></textarea>
+                    <textarea id="deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-primary"></textarea>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Gambar Produk</label>
                     <input type="file" id="gambar" accept="image/*" class="w-full px-4 py-2 border rounded-lg">
                     <div id="currentImage" class="mt-2 hidden">
-                        <p class="text-sm text-gray-600">Gambar saat ini:</p>
+                        <p class="text-sm text-muted">Gambar saat ini:</p>
                         <img id="currentImagePreview" src="" class="h-20 w-20 object-cover rounded mt-1">
                     </div>
                 </div>
                 <div class="flex gap-3">
-                    <button type="submit" class="flex-1 py-2 rounded-lg transition" style="background-color: #C5A028; color: white;">Simpan</button>
+                    <button type="submit" class="btn-primary flex-1 py-2 rounded-lg">Simpan</button>
                     <button type="button" onclick="closeProductModal()" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Batal</button>
                 </div>
             </form>
@@ -176,21 +246,21 @@
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
         <div class="p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="categoryModalTitle" class="text-2xl font-bold" style="color: #2D5A27;">Tambah Kategori</h2>
-                <button onclick="closeCategoryModal()" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
+                <h2 id="categoryModalTitle" class="text-2xl font-bold page-title">Tambah Kategori</h2>
+                <button onclick="closeCategoryModal()" class="text-muted hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
             </div>
             <form id="categoryForm">
                 <input type="hidden" id="categoryId">
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Nama Kategori *</label>
-                    <input type="text" id="nama_kategori" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas">
+                    <input type="text" id="nama_kategori" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-primary">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
-                    <textarea id="cat_deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas"></textarea>
+                    <textarea id="cat_deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-primary"></textarea>
                 </div>
                 <div class="flex gap-3">
-                    <button type="submit" class="flex-1 py-2 rounded-lg transition" style="background-color: #C5A028; color: white;">Simpan</button>
+                    <button type="submit" class="btn-primary flex-1 py-2 rounded-lg">Simpan</button>
                     <button type="button" onclick="closeCategoryModal()" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Batal</button>
                 </div>
             </form>
@@ -199,21 +269,26 @@
 </div>
 
 <script>
-    const ADMIN_PASSWORD = "admin123";
     let categoriesList = [];
 
     // ==================== LOGIN ====================
-    function checkPassword() {
-        const password = document.getElementById('passwordInput').value;
-        if (password === ADMIN_PASSWORD) {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminDashboard').style.display = 'block';
-            loadCategories();
-            loadProducts();
-        } else {
-            Swal.fire('Error', 'Password salah!', 'error');
-        }
+    async function checkPassword() {
+    const password = document.getElementById('passwordInput').value;
+    const res = await fetch('/.netlify/functions/check-password', {
+        method: 'POST',
+        body: JSON.stringify({ password })
+    });
+    const { ok } = await res.json();
+
+    if (ok) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'block';
+        loadCategories();
+        loadProducts();
+    } else {
+        Swal.fire('Error', 'Password salah!', 'error');
     }
+}
 
     function logout() {
         document.getElementById('loginScreen').style.display = 'flex';
@@ -226,22 +301,18 @@
         const categoriesPanel = document.getElementById('categoriesPanel');
         const tabProducts = document.getElementById('tabProducts');
         const tabCategories = document.getElementById('tabCategories');
-        
+
         if (tab === 'products') {
             productsPanel.style.display = 'block';
             categoriesPanel.style.display = 'none';
-            tabProducts.classList.add('tab-active');
-            tabProducts.classList.remove('text-gray-600');
-            tabCategories.classList.remove('tab-active');
-            tabCategories.classList.add('text-gray-600');
+            tabProducts.className = 'tab-active px-6 py-3 font-semibold transition';
+            tabCategories.className = 'tab-inactive px-6 py-3 font-semibold transition';
             loadProducts();
         } else {
             productsPanel.style.display = 'none';
             categoriesPanel.style.display = 'block';
-            tabCategories.classList.add('tab-active');
-            tabCategories.classList.remove('text-gray-600');
-            tabProducts.classList.remove('tab-active');
-            tabProducts.classList.add('text-gray-600');
+            tabCategories.className = 'tab-active px-6 py-3 font-semibold transition';
+            tabProducts.className = 'tab-inactive px-6 py-3 font-semibold transition';
             loadCategoriesList();
         }
     }
@@ -258,40 +329,40 @@
     async function loadCategoriesList() {
         const container = document.getElementById('categoriesContainer');
         container.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';
-        
+
         try {
             const result = await apiCall('admin-categories', 'GET');
             if (result.error) throw new Error(result.error);
-            
+
             const categories = result.data || [];
-            
+
             if (categories.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-gray-500">📦 Belum ada kategori. Klik "Tambah Kategori".</div>';
+                container.innerHTML = '<div class="text-center py-10 text-muted">📦 Belum ada kategori. Klik "Tambah Kategori".</div>';
                 return;
             }
-            
+
             container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="table-wrapper">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
+                            <thead class="bg-soft">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">ID</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Nama Kategori</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Deskripsi</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Aksi</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">ID</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">Nama Kategori</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">Deskripsi</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${categories.map(cat => `
-                                    <tr class="hover:bg-gray-50">
+                                    <tr class="hover:bg-soft">
                                         <td class="px-4 py-3">${cat.id}</td>
                                         <td class="px-4 py-3 font-medium">${escapeHtml(cat.nama_kategori)}</td>
                                         <td class="px-4 py-3">${escapeHtml(cat.deskripsi) || '-'}</td>
                                         <td class="px-4 py-3">
-                                            <button onclick="editCategory(${cat.id})" class="text-emas hover:text-yellow-700 mr-2"><i class="fas fa-edit"></i> Edit</button>
-                                            <button onclick="deleteCategory(${cat.id})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Hapus</button>
-                                          </td>
+                                            <button onclick="editCategory(${cat.id})" class="action-edit mr-2"><i class="fas fa-edit"></i> Edit</button>
+                                            <button onclick="deleteCategory(${cat.id})" class="action-delete"><i class="fas fa-trash"></i> Hapus</button>
+                                        </td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -356,10 +427,10 @@
             text: "Kategori yang memiliki produk tidak bisa dihapus!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
+            confirmButtonColor: '#DC2626',
             confirmButtonText: 'Ya, hapus!'
         });
-        
+
         if (confirm.isConfirmed) {
             try {
                 const result = await apiCall('admin-categories', 'DELETE', { id });
@@ -378,7 +449,7 @@
         const id = document.getElementById('categoryId').value;
         const nama_kategori = document.getElementById('nama_kategori').value;
         const deskripsi = document.getElementById('cat_deskripsi').value;
-        
+
         try {
             let result;
             if (id) {
@@ -386,9 +457,9 @@
             } else {
                 result = await apiCall('admin-categories', 'POST', { nama_kategori, deskripsi });
             }
-            
+
             if (result.error) throw new Error(result.error);
-            
+
             Swal.fire('Sukses', id ? 'Kategori diupdate!' : 'Kategori ditambahkan!', 'success');
             closeCategoryModal();
             loadCategoriesList();
@@ -402,47 +473,47 @@
     async function loadProducts() {
         const container = document.getElementById('productsContainer');
         container.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin"></i> Memuat...</div>';
-        
+
         try {
             const result = await apiCall('admin-products', 'GET');
             if (result.error) throw new Error(result.error);
-            
+
             const products = result.data || [];
-            
+
             if (products.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-gray-500">📦 Belum ada produk. Klik "Tambah Produk".</div>';
+                container.innerHTML = '<div class="text-center py-10 text-muted">📦 Belum ada produk. Klik "Tambah Produk".</div>';
                 return;
             }
-            
+
             const catMap = {};
             categoriesList.forEach(cat => { catMap[cat.id] = cat.nama_kategori; });
-            
+
             container.innerHTML = `
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
                     <div class="table-wrapper">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
+                            <thead class="bg-soft">
                                 <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Gambar</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Nama</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Kategori</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Harga</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Aksi</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">Gambar</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">Nama</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">Kategori</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">Harga</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-primary">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${products.map(product => `
-                                    <tr class="hover:bg-gray-50">
+                                    <tr class="hover:bg-soft">
                                         <td class="px-4 py-3">
-                                            ${product.gambar_url ? `<img src="${product.gambar_url}" class="h-10 w-10 object-cover rounded">` : '<i class="fas fa-image text-gray-400"></i>'}
-                                          </td>
+                                            ${product.gambar_url ? `<img src="${product.gambar_url}" class="h-10 w-10 object-cover rounded">` : '<i class="fas fa-image text-muted"></i>'}
+                                        </td>
                                         <td class="px-4 py-3 font-medium">${escapeHtml(product.nama)}</td>
                                         <td class="px-4 py-3">${escapeHtml(catMap[product.kategori_id] || '-')}</td>
                                         <td class="px-4 py-3">Rp ${product.harga.toLocaleString('id-ID')}</td>
                                         <td class="px-4 py-3">
-                                            <button onclick="editProduct(${product.id})" class="text-emas hover:text-yellow-700 mr-2"><i class="fas fa-edit"></i> Edit</button>
-                                            <button onclick="deleteProduct(${product.id})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Hapus</button>
-                                          </td>
+                                            <button onclick="editProduct(${product.id})" class="action-edit mr-2"><i class="fas fa-edit"></i> Edit</button>
+                                            <button onclick="deleteProduct(${product.id})" class="action-delete"><i class="fas fa-trash"></i> Hapus</button>
+                                        </td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -497,14 +568,14 @@
                 document.getElementById('kategori_id').value = product.kategori_id || '';
                 document.getElementById('harga').value = product.harga;
                 document.getElementById('deskripsi').value = product.deskripsi || '';
-                
+
                 if (product.gambar_url) {
                     document.getElementById('currentImagePreview').src = product.gambar_url;
                     document.getElementById('currentImage').classList.remove('hidden');
                 } else {
                     document.getElementById('currentImage').classList.add('hidden');
                 }
-                
+
                 document.getElementById('productModalTitle').innerText = 'Edit Produk';
                 document.getElementById('productModal').classList.remove('hidden');
                 document.getElementById('productModal').classList.add('flex');
@@ -520,10 +591,10 @@
             text: "Produk akan dihapus permanen!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
+            confirmButtonColor: '#DC2626',
             confirmButtonText: 'Ya, hapus!'
         });
-        
+
         if (confirm.isConfirmed) {
             try {
                 const result = await apiCall('admin-products', 'DELETE', { id });
@@ -544,7 +615,7 @@
         const harga = parseInt(document.getElementById('harga').value);
         const deskripsi = document.getElementById('deskripsi').value;
         const gambarFile = document.getElementById('gambar').files[0];
-        
+
         try {
             let gambarUrl = document.getElementById('currentImagePreview').src;
             if (gambarFile) {
@@ -552,18 +623,18 @@
                 gambarUrl = await uploadImage(gambarFile);
                 Swal.close();
             }
-            
+
             const productData = { nama, kategori_id, harga, deskripsi, gambar_url: gambarUrl || null };
-            
+
             let result;
             if (id) {
                 result = await apiCall('admin-products', 'PUT', { id: parseInt(id), ...productData });
             } else {
                 result = await apiCall('admin-products', 'POST', productData);
             }
-            
+
             if (result.error) throw new Error(result.error);
-            
+
             Swal.fire('Sukses', id ? 'Produk diupdate!' : 'Produk ditambahkan!', 'success');
             closeProductModal();
             loadProducts();
