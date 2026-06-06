@@ -7,21 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .modal { transition: all 0.3s ease; }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
         .table-wrapper { overflow-x: auto; }
     </style>
 </head>
@@ -122,52 +109,14 @@
 </div>
 
 <script>
-    // ==================== KONFIGURASI ====================
-    // 🔴 WAJIB GANTI DENGAN DATA SUPABASE ANDA 🔴
-    const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";  // GANTI!
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";  // GANTI!
-    const ADMIN_PASSWORD = "admin123";
-    // ===================================================
+    const ADMIN_PASSWORD = "admin123"; // Ganti dengan password Anda
     
-    let supabaseClient = null;
-    
-    // Cek koneksi Supabase
-    async function testSupabaseConnection() {
-        if (!SUPABASE_URL || SUPABASE_URL === "https://xxxxxxxxxxxx.supabase.co") {
-            Swal.fire('Error Konfigurasi', 'SUPABASE_URL belum diisi! Silakan edit file admin.html', 'error');
-            return false;
-        }
-        if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")) {
-            Swal.fire('Error Konfigurasi', 'SUPABASE_ANON_KEY belum diisi! Silakan edit file admin.html', 'error');
-            return false;
-        }
-        
-        try {
-            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            // Test query sederhana
-            const { error } = await supabase.from('produk').select('count', { count: 'exact', head: true });
-            if (error && error.message.includes('relation')) {
-                Swal.fire('Error Tabel', 'Tabel "produk" belum ada di Supabase! Buat tabel terlebih dahulu.', 'error');
-                return false;
-            }
-            supabaseClient = supabase;
-            return true;
-        } catch (error) {
-            Swal.fire('Koneksi Gagal', 'Tidak bisa terhubung ke Supabase. Periksa URL dan ANON KEY.\n\nError: ' + error.message, 'error');
-            return false;
-        }
-    }
-    
-    async function checkPassword() {
+    function checkPassword() {
         const password = document.getElementById('passwordInput').value;
         if (password === ADMIN_PASSWORD) {
-            // Test koneksi Supabase sebelum masuk
-            const connected = await testSupabaseConnection();
-            if (connected) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'block';
-                loadProducts();
-            }
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadProducts();
         } else {
             Swal.fire('Error', 'Password salah!', 'error');
         }
@@ -176,33 +125,20 @@
     function logout() {
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('adminDashboard').style.display = 'none';
-        document.getElementById('passwordInput').value = '';
-    }
-    
-    function getSupabase() {
-        if (!supabaseClient) {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
-        return supabaseClient;
     }
     
     async function loadProducts() {
         const container = document.getElementById('productsContainer');
-        container.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-2xl"></i> Memuat produk...</div>';
-        
-        const supabase = getSupabase();
+        container.innerHTML = '<div class="text-center py-10"><i class="fas fa-spinner fa-spin text-2xl"></i> Memuat...</div>';
         
         try {
-            const { data, error } = await supabase.from('produk').select('*').order('created_at', { ascending: false });
+            const response = await fetch('/.netlify/functions/admin-products');
+            const { data, error } = await response.json();
             
-            if (error) {
-                console.error('Supabase error:', error);
-                container.innerHTML = `<div class="text-center py-10 text-red-500">Error: ${error.message}<br><br>${error.hint ? 'Hint: ' + error.hint : ''}</div>`;
-                return;
-            }
+            if (error) throw new Error(error);
             
             if (!data || data.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-gray-500">📦 Belum ada produk. Klik "Tambah Produk" untuk menambahkan.</div>';
+                container.innerHTML = '<div class="text-center py-10 text-gray-500">📦 Belum ada produk. Klik "Tambah" untuk menambahkan.</div>';
                 return;
             }
             
@@ -229,10 +165,10 @@
                                         <td class="px-4 py-3">${escapeHtml(product.kategori) || '-'}</td>
                                         <td class="px-4 py-3">Rp ${product.harga.toLocaleString('id-ID')}</td>
                                         <td class="px-4 py-3">
-                                            <button onclick="editProduct(${product.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i> Edit</button>
+                                            <button onclick='editProduct(${JSON.stringify(product).replace(/'/g, "&#39;")})' class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i> Edit</button>
                                             <button onclick="deleteProduct(${product.id})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Hapus</button>
-                                        </td>
-                                    </tr>
+                                         </td>
+                                     </tr>
                                 `).join('')}
                             </tbody>
                         </table>
@@ -240,33 +176,35 @@
                 </div>
             `;
         } catch (error) {
-            console.error('Load error:', error);
+            console.error(error);
             container.innerHTML = `<div class="text-center py-10 text-red-500">❌ Gagal memuat produk: ${error.message}</div>`;
         }
     }
     
     async function uploadImage(file) {
-        const supabase = getSupabase();
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const filePath = `produk-images/${fileName}`;
-        
-        // Cek apakah bucket ada
-        const { error: bucketError } = await supabase.storage.getBucket('produk-images');
-        if (bucketError) {
-            throw new Error('Bucket "produk-images" tidak ditemukan. Buat bucket terlebih dahulu di Supabase Storage.');
-        }
-        
-        const { error } = await supabase.storage.from('produk-images').upload(filePath, file);
-        if (error) throw error;
-        
-        const { data: { publicUrl } } = supabase.storage.from('produk-images').getPublicUrl(filePath);
-        return publicUrl;
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                try {
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
+                    const response = await fetch('/.netlify/functions/upload-image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ file: reader.result, fileName })
+                    });
+                    const result = await response.json();
+                    if (result.error) throw new Error(result.error);
+                    resolve(result.url);
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            reader.readAsDataURL(file);
+        });
     }
     
     document.getElementById('productForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const supabase = getSupabase();
         const id = document.getElementById('productId').value;
         const nama = document.getElementById('nama').value;
         const kategori = document.getElementById('kategori').value;
@@ -277,44 +215,48 @@
         try {
             let gambarUrl = document.getElementById('currentImagePreview').src;
             if (gambarFile) {
-                const uploading = await Swal.fire({ title: 'Uploading...', text: 'Mengupload gambar...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+                Swal.fire({ title: 'Uploading...', text: 'Mengupload gambar...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
                 gambarUrl = await uploadImage(gambarFile);
                 Swal.close();
             }
             
             const productData = { nama, kategori, harga, deskripsi, gambar_url: gambarUrl || null };
             
-            let result;
+            let response;
             if (id) {
-                result = await supabase.from('produk').update(productData).eq('id', parseInt(id));
+                response = await fetch('/.netlify/functions/admin-products', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: parseInt(id), ...productData })
+                });
             } else {
-                result = await supabase.from('produk').insert([productData]);
+                response = await fetch('/.netlify/functions/admin-products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
             }
             
-            if (result.error) throw result.error;
+            const result = await response.json();
+            if (result.error) throw new Error(result.error);
             
-            Swal.fire('Sukses', id ? 'Produk berhasil diupdate!' : 'Produk berhasil ditambahkan!', 'success');
+            Swal.fire('Sukses', id ? 'Produk diupdate!' : 'Produk ditambahkan!', 'success');
             closeModal();
             loadProducts();
         } catch (error) {
-            console.error('Save error:', error);
             Swal.fire('Error', error.message, 'error');
         }
     });
     
-    async function editProduct(id) {
-        const supabase = getSupabase();
-        const { data, error } = await supabase.from('produk').select('*').eq('id', id).single();
-        if (error) return Swal.fire('Error', error.message, 'error');
+    function editProduct(product) {
+        document.getElementById('productId').value = product.id;
+        document.getElementById('nama').value = product.nama;
+        document.getElementById('kategori').value = product.kategori || '';
+        document.getElementById('harga').value = product.harga;
+        document.getElementById('deskripsi').value = product.deskripsi || '';
         
-        document.getElementById('productId').value = data.id;
-        document.getElementById('nama').value = data.nama;
-        document.getElementById('kategori').value = data.kategori || '';
-        document.getElementById('harga').value = data.harga;
-        document.getElementById('deskripsi').value = data.deskripsi || '';
-        
-        if (data.gambar_url) {
-            document.getElementById('currentImagePreview').src = data.gambar_url;
+        if (product.gambar_url) {
+            document.getElementById('currentImagePreview').src = product.gambar_url;
             document.getElementById('currentImage').classList.remove('hidden');
         } else {
             document.getElementById('currentImage').classList.add('hidden');
@@ -328,9 +270,13 @@
     async function deleteProduct(id) {
         const confirm = await Swal.fire({ title: 'Yakin hapus?', text: "Produk akan dihapus permanen!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', confirmButtonText: 'Ya, hapus!' });
         if (confirm.isConfirmed) {
-            const supabase = getSupabase();
-            const { error } = await supabase.from('produk').delete().eq('id', id);
-            if (error) return Swal.fire('Error', error.message, 'error');
+            const response = await fetch('/.netlify/functions/admin-products', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+            const result = await response.json();
+            if (result.error) return Swal.fire('Error', result.error, 'error');
             Swal.fire('Terhapus!', 'Produk berhasil dihapus.', 'success');
             loadProducts();
         }
