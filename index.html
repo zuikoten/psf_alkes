@@ -7,8 +7,6 @@
     <meta name="description" content="Toko alat kesehatan online terpercaya">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -21,16 +19,6 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-
-    <!-- ==================== KONFIGURASI SUPABASE ==================== -->
-    <!-- ISI DENGAN DATA SUPABASE ANDA -->
-    <script>
-        const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";  // GANTI DENGAN URL SUPABASE ANDA
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";  // GANTI DENGAN ANON KEY ANDA
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    </script>
-    <!-- ============================================================= -->
 
     <!-- Navbar -->
     <nav class="bg-white shadow-md sticky top-0 z-50">
@@ -59,7 +47,7 @@
         </div>
     </section>
 
-    <!-- Featured Products (Mengambil dari Supabase) -->
+    <!-- Featured Products -->
     <section class="container mx-auto px-4 py-12">
         <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
             <i class="fas fa-star text-yellow-500 mr-2"></i> Produk Unggulan
@@ -81,17 +69,15 @@
     </footer>
 
     <script>
-        // Fungsi untuk memuat produk unggulan (ambil 4 produk terbaru atau random)
+        // Fungsi untuk memuat produk unggulan melalui Netlify Function
         async function loadFeaturedProducts() {
             const container = document.getElementById('featured-products');
             
             try {
-                const { data: products, error } = await supabase
-                    .from('produk')
-                    .select('*')
-                    .limit(4);
+                const response = await fetch('/.netlify/functions/get-products?limit=4');
+                const { data: products, error } = await response.json();
                     
-                if (error) throw error;
+                if (error) throw new Error(error);
                 
                 if (!products || products.length === 0) {
                     container.innerHTML = '<div class="col-span-full text-center text-gray-500">Belum ada produk tersedia</div>';
@@ -121,13 +107,13 @@
                 
             } catch (error) {
                 console.error('Error loading products:', error);
-                container.innerHTML = '<div class="col-span-full text-center text-red-500">Gagal memuat produk. Periksa koneksi atau konfigurasi Supabase.</div>';
+                container.innerHTML = '<div class="col-span-full text-center text-red-500">Gagal memuat produk. Periksa koneksi atau konfigurasi.</div>';
             }
         }
         
         // Fungsi global untuk WhatsApp order
         window.orderViaWhatsApp = function(namaProduk, harga) {
-            const phoneNumber = "6281234567890"; // GANTI DENGAN NOMOR WHATSAPP ANDA (gunakan kode negara tanpa +)
+            const phoneNumber = "6281234567890"; // GANTI DENGAN NOMOR WHATSAPP ANDA
             const message = `Halo MediStore,%0A%0ASaya ingin memesan produk berikut:%0A*${namaProduk}*%0AHarga: Rp ${harga.toLocaleString('id-ID')}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
             window.open(whatsappUrl, '_blank');

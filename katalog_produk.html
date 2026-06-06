@@ -6,8 +6,6 @@
     <title>Katalog Produk - MediStore</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -23,15 +21,6 @@
     </style>
 </head>
 <body class="bg-gray-50">
-
-    <!-- ==================== KONFIGURASI SUPABASE ==================== -->
-    <script>
-        const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";  // GANTI DENGAN URL SUPABASE ANDA
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";  // GANTI DENGAN ANON KEY ANDA
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    </script>
-    <!-- ============================================================= -->
 
     <!-- Navbar -->
     <nav class="bg-white shadow-md sticky top-0 z-50">
@@ -55,7 +44,6 @@
         <!-- Search & Filter Section -->
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <div class="flex flex-col md:flex-row gap-4">
-                <!-- Search Box -->
                 <div class="flex-1">
                     <label class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-search"></i> Cari Produk
@@ -64,18 +52,15 @@
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500">
                 </div>
                 
-                <!-- Filter Kategori -->
                 <div class="md:w-64">
                     <label class="block text-gray-700 font-semibold mb-2">
                         <i class="fas fa-filter"></i> Kategori
                     </label>
                     <select id="categoryFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-teal-500">
                         <option value="all">Semua Kategori</option>
-                        <!-- Kategori akan diisi dari database -->
                     </select>
                 </div>
 
-                <!-- Reset Button -->
                 <div class="flex items-end">
                     <button id="resetFilter" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition">
                         <i class="fas fa-undo-alt"></i> Reset
@@ -84,12 +69,10 @@
             </div>
         </div>
 
-        <!-- Products Count & View -->
         <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
             <p id="productCount" class="text-gray-600">0 produk ditemukan</p>
         </div>
 
-        <!-- Products Grid -->
         <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <div class="col-span-full text-center py-10 text-gray-500">
                 <i class="fas fa-spinner fa-spin text-3xl"></i>
@@ -98,7 +81,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-6 mt-12">
         <div class="container mx-auto px-4 text-center">
             <p>&copy; 2025 MediStore - Toko Alat Kesehatan</p>
@@ -106,22 +88,18 @@
     </footer>
 
     <script>
-        let allProducts = []; // Menyimpan semua produk dari database
+        let allProducts = [];
         let uniqueCategories = new Set();
 
-        // Fungsi untuk mengambil semua produk dari Supabase (real-time)
         async function loadAllProducts() {
             try {
-                const { data, error } = await supabase
-                    .from('produk')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                const response = await fetch('/.netlify/functions/get-products');
+                const { data, error } = await response.json();
                     
-                if (error) throw error;
+                if (error) throw new Error(error);
                 
                 allProducts = data || [];
                 
-                // Extract unique categories
                 uniqueCategories.clear();
                 allProducts.forEach(product => {
                     if (product.kategori && product.kategori.trim() !== '') {
@@ -129,14 +107,12 @@
                     }
                 });
                 
-                // Populate category filter dropdown
                 const categorySelect = document.getElementById('categoryFilter');
                 categorySelect.innerHTML = '<option value="all">Semua Kategori</option>';
                 Array.from(uniqueCategories).sort().forEach(cat => {
                     categorySelect.innerHTML += `<option value="${cat}">${cat}</option>`;
                 });
                 
-                // Render awal
                 filterAndRenderProducts();
                 
             } catch (error) {
@@ -144,35 +120,27 @@
                 document.getElementById('productsGrid').innerHTML = `
                     <div class="col-span-full text-center text-red-500 py-10">
                         <i class="fas fa-exclamation-circle text-4xl"></i>
-                        <p class="mt-2">Gagal memuat produk. Pastikan tabel "produk" ada di Supabase.</p>
-                        <p class="text-sm mt-1">Error: ${error.message}</p>
+                        <p class="mt-2">Gagal memuat produk. Pastikan Netlify Functions sudah terdeploy.</p>
                     </div>
                 `;
             }
         }
         
-        // Filter dan render berdasarkan search & kategori
         function filterAndRenderProducts() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const selectedCategory = document.getElementById('categoryFilter').value;
             
             let filtered = allProducts.filter(product => {
-                // Filter by search
                 const matchesSearch = product.nama.toLowerCase().includes(searchTerm);
-                
-                // Filter by category
                 let matchesCategory = true;
                 if (selectedCategory !== 'all') {
                     matchesCategory = product.kategori === selectedCategory;
                 }
-                
                 return matchesSearch && matchesCategory;
             });
             
-            // Update count
             document.getElementById('productCount').innerText = `${filtered.length} produk ditemukan`;
             
-            // Render ke grid
             const grid = document.getElementById('productsGrid');
             
             if (filtered.length === 0) {
@@ -210,15 +178,12 @@
             `).join('');
         }
         
-        // Fungsi global WhatsApp order
         window.orderViaWhatsApp = function(namaProduk, harga) {
-            const phoneNumber = "6281234567890"; // GANTI DENGAN NOMOR WHATSAPP ANDA
+            const phoneNumber = "6281234567890";
             const message = `Halo MediStore,%0A%0ASaya ingin memesan produk berikut:%0A*${namaProduk}*%0AHarga: Rp ${harga.toLocaleString('id-ID')}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-            window.open(whatsappUrl, '_blank');
+            window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
         };
         
-        // Event listeners
         document.getElementById('searchInput').addEventListener('input', filterAndRenderProducts);
         document.getElementById('categoryFilter').addEventListener('change', filterAndRenderProducts);
         document.getElementById('resetFilter').addEventListener('click', () => {
@@ -227,25 +192,7 @@
             filterAndRenderProducts();
         });
         
-        // Subscribe ke perubahan real-time Supabase
-        function subscribeToChanges() {
-            const subscription = supabase
-                .channel('produk_changes')
-                .on('postgres_changes', 
-                    { event: '*', schema: 'public', table: 'produk' }, 
-                    (payload) => {
-                        console.log('Real-time update:', payload);
-                        loadAllProducts(); // Reload ulang data
-                    }
-                )
-                .subscribe();
-        }
-        
-        // Inisialisasi
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAllProducts();
-            subscribeToChanges();
-        });
+        document.addEventListener('DOMContentLoaded', loadAllProducts);
     </script>
 </body>
 </html>
