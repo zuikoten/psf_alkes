@@ -9,25 +9,47 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .tab-active {
-            background-color: #0d9488;
+            background-color: #C5A028;  /* Warna emas */
             color: white;
         }
         .modal { transition: all 0.3s ease; }
         .table-wrapper { overflow-x: auto; }
+        .btn-emas {
+            background-color: #C5A028;
+            color: white;
+        }
+        .btn-emas:hover {
+            background-color: #A8861E;
+        }
+        .text-emas {
+            color: #C5A028;
+        }
+        .border-emas {
+            border-color: #C5A028;
+        }
+        .bg-hijau-tua {
+            background-color: #2D5A27;
+        }
+        .bg-hijau-muda {
+            background-color: #4A7C3F;
+        }
+        .hover\\:bg-hijau-tua:hover {
+            background-color: #2D5A27;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
 
 <!-- Login Screen -->
-<div id="loginScreen" class="min-h-screen flex items-center justify-center bg-gradient-to-r from-teal-500 to-blue-600">
+<div id="loginScreen" class="min-h-screen flex items-center justify-center" style="background: linear-gradient(135deg, #2D5A27 0%, #4A7C3F 100%);">
     <div class="bg-white rounded-lg shadow-xl p-8 w-96">
         <div class="text-center mb-6">
-            <i class="fas fa-lock text-4xl text-teal-600"></i>
-            <h2 class="text-2xl font-bold mt-2">Admin Login</h2>
+            <i class="fas fa-hospital-user text-5xl mb-2" style="color: #C5A028;"></i>
+            <h2 class="text-2xl font-bold" style="color: #2D5A27;">Admin Login</h2>
             <p class="text-gray-500 text-sm">Masukkan password untuk mengakses dashboard</p>
         </div>
-        <input type="password" id="passwordInput" placeholder="Password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500 mb-4">
-        <button onclick="checkPassword()" class="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition">
+        <input type="password" id="passwordInput" placeholder="Password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas mb-4">
+        <button onclick="checkPassword()" class="w-full py-2 rounded-lg transition" style="background-color: #C5A028; color: white; hover:background-color: #A8861E;">
             <i class="fas fa-sign-in-alt"></i> Login
         </button>
     </div>
@@ -38,10 +60,10 @@
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center flex-wrap gap-2">
             <div class="flex items-center space-x-2">
-                <i class="fas fa-hospital-user text-teal-600 text-2xl"></i>
-                <span class="text-xl font-bold text-teal-700">MediStore Admin</span>
+                <i class="fas fa-hospital-user text-2xl" style="color: #C5A028;"></i>
+                <span class="text-xl font-bold" style="color: #2D5A27;">MediStore Admin</span>
             </div>
-            <button onclick="logout()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">
+            <button onclick="logout()" class="px-4 py-2 rounded-lg text-sm transition" style="background-color: #C5A028; color: white;">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
@@ -54,7 +76,7 @@
                 <button id="tabProducts" onclick="switchTab('products')" class="tab-active px-6 py-3 font-semibold transition">
                     <i class="fas fa-boxes"></i> Produk
                 </button>
-                <button id="tabCategories" onclick="switchTab('categories')" class="px-6 py-3 font-semibold text-gray-600 hover:text-teal-600 transition">
+                <button id="tabCategories" onclick="switchTab('categories')" class="px-6 py-3 font-semibold text-gray-600 hover:text-emas transition">
                     <i class="fas fa-tags"></i> Kategori
                 </button>
             </div>
@@ -65,8 +87,8 @@
         <!-- Halaman Produk -->
         <div id="productsPanel">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-bold text-gray-800">Manajemen Produk</h1>
-                <button onclick="showAddProductModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                <h1 class="text-2xl font-bold" style="color: #2D5A27;">Manajemen Produk</h1>
+                <button onclick="showAddProductModal()" class="px-4 py-2 rounded-lg transition" style="background-color: #4A7C3F; color: white;">
                     <i class="fas fa-plus"></i> Tambah Produk
                 </button>
             </div>
@@ -78,8 +100,8 @@
         <!-- Halaman Kategori -->
         <div id="categoriesPanel" style="display: none;">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-2xl font-bold text-gray-800">Manajemen Kategori</h1>
-                <button onclick="showAddCategoryModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                <h1 class="text-2xl font-bold" style="color: #2D5A27;">Manajemen Kategori</h1>
+                <button onclick="showAddCategoryModal()" class="px-4 py-2 rounded-lg transition" style="background-color: #4A7C3F; color: white;">
                     <i class="fas fa-plus"></i> Tambah Kategori
                 </button>
             </div>
@@ -95,28 +117,28 @@
     <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-screen overflow-y-auto">
         <div class="p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="productModalTitle" class="text-2xl font-bold">Tambah Produk</h2>
+                <h2 id="productModalTitle" class="text-2xl font-bold" style="color: #2D5A27;">Tambah Produk</h2>
                 <button onclick="closeProductModal()" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
             </div>
             <form id="productForm">
                 <input type="hidden" id="productId">
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Nama Produk *</label>
-                    <input type="text" id="nama" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500">
+                    <input type="text" id="nama" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Kategori *</label>
-                    <select id="kategori_id" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500">
+                    <select id="kategori_id" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas">
                         <option value="">Pilih Kategori</option>
                     </select>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Harga (Rp) *</label>
-                    <input type="number" id="harga" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500">
+                    <input type="number" id="harga" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
-                    <textarea id="deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500"></textarea>
+                    <textarea id="deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas"></textarea>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Gambar Produk</label>
@@ -127,7 +149,7 @@
                     </div>
                 </div>
                 <div class="flex gap-3">
-                    <button type="submit" class="flex-1 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700">Simpan</button>
+                    <button type="submit" class="flex-1 py-2 rounded-lg transition" style="background-color: #C5A028; color: white;">Simpan</button>
                     <button type="button" onclick="closeProductModal()" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Batal</button>
                 </div>
             </form>
@@ -140,21 +162,21 @@
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
         <div class="p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 id="categoryModalTitle" class="text-2xl font-bold">Tambah Kategori</h2>
+                <h2 id="categoryModalTitle" class="text-2xl font-bold" style="color: #2D5A27;">Tambah Kategori</h2>
                 <button onclick="closeCategoryModal()" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
             </div>
             <form id="categoryForm">
                 <input type="hidden" id="categoryId">
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Nama Kategori *</label>
-                    <input type="text" id="nama_kategori" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500">
+                    <input type="text" id="nama_kategori" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
-                    <textarea id="cat_deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-teal-500"></textarea>
+                    <textarea id="cat_deskripsi" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-emas"></textarea>
                 </div>
                 <div class="flex gap-3">
-                    <button type="submit" class="flex-1 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700">Simpan</button>
+                    <button type="submit" class="flex-1 py-2 rounded-lg transition" style="background-color: #C5A028; color: white;">Simpan</button>
                     <button type="button" onclick="closeCategoryModal()" class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Batal</button>
                 </div>
             </form>
@@ -164,7 +186,7 @@
 
 <script>
     const ADMIN_PASSWORD = "admin123";
-    let categoriesList = []; // Untuk menyimpan daftar kategori
+    let categoriesList = [];
 
     // ==================== LOGIN ====================
     function checkPassword() {
@@ -172,7 +194,7 @@
         if (password === ADMIN_PASSWORD) {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminDashboard').style.display = 'block';
-            loadCategories(); // Load kategori dulu
+            loadCategories();
             loadProducts();
         } else {
             Swal.fire('Error', 'Password salah!', 'error');
@@ -253,9 +275,9 @@
                                         <td class="px-4 py-3 font-medium">${escapeHtml(cat.nama_kategori)}</td>
                                         <td class="px-4 py-3">${escapeHtml(cat.deskripsi) || '-'}</td>
                                         <td class="px-4 py-3">
-                                            <button onclick="editCategory(${cat.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i> Edit</button>
+                                            <button onclick="editCategory(${cat.id})" class="text-emas hover:text-yellow-700 mr-2"><i class="fas fa-edit"></i> Edit</button>
                                             <button onclick="deleteCategory(${cat.id})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Hapus</button>
-                                         </td>
+                                          </td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -273,7 +295,6 @@
             const result = await apiCall('admin-categories', 'GET');
             if (!result.error) {
                 categoriesList = result.data || [];
-                // Update dropdown kategori di form produk
                 const select = document.getElementById('kategori_id');
                 select.innerHTML = '<option value="">Pilih Kategori</option>';
                 categoriesList.forEach(cat => {
@@ -331,7 +352,7 @@
                 if (result.error) throw new Error(result.error);
                 Swal.fire('Terhapus!', 'Kategori berhasil dihapus.', 'success');
                 loadCategoriesList();
-                loadCategories(); // Refresh dropdown
+                loadCategories();
             } catch (error) {
                 Swal.fire('Error', error.message, 'error');
             }
@@ -357,7 +378,7 @@
             Swal.fire('Sukses', id ? 'Kategori diupdate!' : 'Kategori ditambahkan!', 'success');
             closeCategoryModal();
             loadCategoriesList();
-            loadCategories(); // Refresh dropdown di produk
+            loadCategories();
         } catch (error) {
             Swal.fire('Error', error.message, 'error');
         }
@@ -379,7 +400,6 @@
                 return;
             }
             
-            // Map kategori id ke nama
             const catMap = {};
             categoriesList.forEach(cat => { catMap[cat.id] = cat.nama_kategori; });
             
@@ -401,15 +421,15 @@
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-4 py-3">
                                             ${product.gambar_url ? `<img src="${product.gambar_url}" class="h-10 w-10 object-cover rounded">` : '<i class="fas fa-image text-gray-400"></i>'}
-                                         </td>
+                                          </td>
                                         <td class="px-4 py-3 font-medium">${escapeHtml(product.nama)}</td>
                                         <td class="px-4 py-3">${escapeHtml(catMap[product.kategori_id] || '-')}</td>
                                         <td class="px-4 py-3">Rp ${product.harga.toLocaleString('id-ID')}</td>
                                         <td class="px-4 py-3">
-                                            <button onclick="editProduct(${product.id})" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-edit"></i> Edit</button>
+                                            <button onclick="editProduct(${product.id})" class="text-emas hover:text-yellow-700 mr-2"><i class="fas fa-edit"></i> Edit</button>
                                             <button onclick="deleteProduct(${product.id})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Hapus</button>
-                                         </td>
-                                     </tr>
+                                          </td>
+                                    </tr>
                                 `).join('')}
                             </tbody>
                         </table>
