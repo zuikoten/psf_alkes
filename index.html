@@ -28,7 +28,41 @@
         .text-muted             { color: var(--color-text-muted); }
 
         .hero-bg {
-            background: linear-gradient(160deg, var(--color-primary) 0%, var(--color-secondary) 60%, var(--color-light) 100%);
+            position: relative;
+            background-image: url('/hero-bg.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            /* Fallback kalau foto belum ada */
+            background-color: var(--color-primary);
+        }
+
+        /* Overlay gradasi dari bawah ke atas — Opsi C */
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(13, 71, 161, 0.93)  0%,
+                rgba(21, 101, 192, 0.65) 45%,
+                rgba(0,  0,   0,  0.15)  100%
+            );
+            z-index: 0;
+        }
+
+        /* Konten hero harus di atas overlay */
+        .hero-bg > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mobile: tinggi minimum supaya foto kelihatan */
+        @media (max-width: 640px) {
+            .hero-bg {
+                min-height: 320px;
+                background-position: center 25%;
+            }
         }
 
         .btn-primary {
@@ -97,10 +131,10 @@
     <script src="/navbar.js"></script>
 
     <!-- Hero Section -->
-    <section class="hero-bg py-20">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">Kesehatan Anda Prioritas Kami</h1>
-            <p class="text-xl mb-8" style="color: rgba(255,255,255,0.85);">Alat medis berkualitas dengan harga terbaik</p>
+    <section class="hero-bg" style="min-height: 480px; display: flex; align-items: flex-end;">
+        <div class="container mx-auto px-6 pb-12 pt-32">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-3">Kesehatan Anda Prioritas Kami</h1>
+            <p class="text-lg md:text-xl mb-8" style="color: rgba(255,255,255,0.85);">Alat medis berkualitas dengan harga terbaik</p>
             <a href="katalog_produk.html" class="btn-primary px-8 py-3 rounded-full inline-flex items-center space-x-2 shadow-lg">
                 <span>Lihat Katalog</span>
                 <i class="fas fa-arrow-right"></i>
