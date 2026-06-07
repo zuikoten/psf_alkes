@@ -21,13 +21,6 @@
 
         body                { background-color: var(--color-bg-page); }
 
-        /* Navbar */
-        .navbar             { background: var(--color-white); box-shadow: 0 2px 8px rgba(21,101,192,0.1); }
-        .navbar-brand       { color: var(--color-primary); font-weight: 700; }
-        .navbar-icon        { color: var(--color-secondary); }
-        .nav-link           { color: var(--color-text-muted); transition: color 0.2s; }
-        .nav-link:hover     { color: var(--color-primary); }
-
         /* Breadcrumb */
         .breadcrumb-link    { color: var(--color-secondary); }
         .breadcrumb-link:hover { color: var(--color-primary); text-decoration: underline; }
@@ -137,18 +130,8 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-hospital-user text-2xl navbar-icon"></i>
-                <span class="text-2xl navbar-brand">PSF Alkes</span>
-            </div>
-            <div class="flex space-x-4">
-                <a href="index.html" class="nav-link">Beranda</a>
-                <a href="katalog_produk.html" class="nav-link">Katalog</a>
-            </div>
-        </div>
-    </nav>
+    <div id="navbar"></div>
+    <script src="/navbar.js"></script>
 
     <!-- Konten utama -->
     <div class="container mx-auto px-4 py-8 max-w-5xl">
