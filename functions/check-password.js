@@ -1,8 +1,21 @@
-exports.handler = async (event) => {
-    const { password } = JSON.parse(event.body);
-
-    if (password === process.env.ADMIN_PASSWORD) {
-        return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+export default {
+  async fetch(request, env) {
+    if (request.method !== "POST") {
+      return json({ ok: false }, 405);
     }
-    return { statusCode: 401, body: JSON.stringify({ ok: false }) };
+
+    const { password } = await request.json();
+
+    if (password === env.ADMIN_PASSWORD) {
+      return json({ ok: true }, 200);
+    }
+    return json({ ok: false }, 401);
+  },
 };
+
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}

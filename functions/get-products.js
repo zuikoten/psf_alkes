@@ -1,149 +1,151 @@
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from "@supabase/supabase-js";
 
-exports.handler = async (event, context) => {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+export default {
+  async fetch(request, env) {
+    const supabaseUrl = env.SUPABASE_URL;
+    const supabaseAnonKey = env.SUPABASE_ANON_KEY;
+
+    const corsHeaders = {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    };
 
     if (!supabaseUrl || !supabaseAnonKey) {
-        return {
-            statusCode: 500,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({
-                error: 'Konfigurasi Supabase tidak ditemukan. Pastikan environment variables sudah diatur di Netlify.'
-            })
-        };
+      return new Response(
+        JSON.stringify({
+          error:
+            "Konfigurasi Supabase tidak ditemukan. Pastikan environment variables sudah diatur.",
+        }),
+        { status: 500, headers: corsHeaders }
+      );
     }
 
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    // Handle CORS preflight
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: corsHeaders });
+    }
 
     try {
-        const params = event.queryStringParameters || {};
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+      const { searchParams } = new URL(request.url);
 
-        const mode       = params.mode   || 'default';   // 'default' | 'terbaru' | 'unggulan' | 'katalog'
-        const limitParam = params.limit  ? parseInt(params.limit) : null;
-        const page       = params.page   ? Math.max(1, parseInt(params.page)) : 1;
-        const search     = params.search ? params.search.trim() : '';
-        const kategoriId = params.kategori || null;
+      const mode       = searchParams.get("mode")    || "default";
+      const limitParam = searchParams.get("limit")   ? parseInt(searchParams.get("limit")) : null;
+      const page       = searchParams.get("page")    ? Math.max(1, parseInt(searchParams.get("page"))) : 1;
+      const search     = searchParams.get("search")  ? searchParams.get("search").trim() : "";
+      const kategoriId = searchParams.get("kategori") || null;
 
-        // ── MODE: terbaru (index — 6 produk terbaru) ───────────────────────
-        if (mode === 'terbaru') {
-            const limit = limitParam || 6;
-            const { data, error } = await supabase
-                .from('produk')
-                .select('*')
-                .order('created_at', { ascending: false })
-                .limit(limit);
+      // ── MODE: terbaru ────────────────────────────────────────────────
+      if (mode === "terbaru") {
+        const limit = limitParam || 6;
+        const { data, error } = await supabase
+          .from("produk")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(limit);
 
-            if (error) throw error;
-            return respond({ data, success: true });
-        }
-
-        // ── MODE: unggulan (index — produk dengan is_featured = true) ────────
-        if (mode === 'unggulan') {
-            const limit = limitParam || 4;
-            const { data, error } = await supabase
-                .from('produk')
-                .select('*')
-                .eq('is_featured', true)
-                .order('created_at', { ascending: false })
-                .limit(limit);
-
-            if (error) throw error;
-            return respond({ data, success: true });
-        }
-
-        // ── MODE: katalog (server-side filter + paginasi) ──────────────────
-        if (mode === 'katalog') {
-            const limit = limitParam || 12;
-            const from  = (page - 1) * limit;
-            const to    = from + limit - 1;
-
-            // Query dengan count untuk hitung total halaman
-            let query = supabase
-                .from('produk')
-                .select('*', { count: 'exact' })
-                .order('created_at', { ascending: false })
-                .range(from, to);
-
-            if (search) {
-                // ilike = case-insensitive LIKE di Supabase
-                query = query.ilike('nama', `%${search}%`);
-            }
-
-            if (kategoriId && kategoriId !== 'all') {
-                query = query.eq('kategori_id', parseInt(kategoriId));
-            }
-
-            const { data, error, count } = await query;
-
-            if (error) throw error;
-
-            const totalPages = Math.ceil((count || 0) / limit);
-
-            return respond({
-                data,
-                success:     true,
-                pagination: {
-                    page,
-                    limit,
-                    total:      count || 0,
-                    totalPages,
-                    hasNext:    page < totalPages,
-                    hasPrev:    page > 1
-                }
-            });
-        }
-
-        // ── MODE: detail (halaman produk — fetch satu produk by id) ───────
-        if (mode === 'detail') {
-            const id = parseInt(params.id);
-            if (!id || isNaN(id)) {
-                return respond({ data: null, success: false, error: 'ID produk tidak valid' });
-            }
-
-            const { data, error } = await supabase
-                .from('produk')
-                .select('*, kategori(nama_kategori)')   // join nama kategori sekalian
-                .eq('id', id)
-                .single();
-
-            if (error) {
-                // .single() throw error jika tidak ditemukan
-                return respond({ data: null, success: false, error: 'Produk tidak ditemukan' });
-            }
-
-            return respond({ data, success: true });
-        }
-
-        // ── MODE: default / legacy (kompatibel dengan kode lama) ───────────
-        const limit = limitParam || null;
-        let query = supabase
-            .from('produk')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (limit && !isNaN(limit)) {
-            query = query.limit(limit);
-        }
-
-        const { data, error } = await query;
         if (error) throw error;
-        return respond({ data, success: true });
+        return respond({ data, success: true }, corsHeaders);
+      }
 
+      // ── MODE: unggulan ───────────────────────────────────────────────
+      if (mode === "unggulan") {
+        const limit = limitParam || 4;
+        const { data, error } = await supabase
+          .from("produk")
+          .select("*")
+          .eq("is_featured", true)
+          .order("created_at", { ascending: false })
+          .limit(limit);
+
+        if (error) throw error;
+        return respond({ data, success: true }, corsHeaders);
+      }
+
+      // ── MODE: katalog ────────────────────────────────────────────────
+      if (mode === "katalog") {
+        const limit = limitParam || 12;
+        const from  = (page - 1) * limit;
+        const to    = from + limit - 1;
+
+        let query = supabase
+          .from("produk")
+          .select("*", { count: "exact" })
+          .order("created_at", { ascending: false })
+          .range(from, to);
+
+        if (search) query = query.ilike("nama", `%${search}%`);
+        if (kategoriId && kategoriId !== "all")
+          query = query.eq("kategori_id", parseInt(kategoriId));
+
+        const { data, error, count } = await query;
+        if (error) throw error;
+
+        const totalPages = Math.ceil((count || 0) / limit);
+        return respond(
+          {
+            data,
+            success: true,
+            pagination: {
+              page,
+              limit,
+              total: count || 0,
+              totalPages,
+              hasNext: page < totalPages,
+              hasPrev: page > 1,
+            },
+          },
+          corsHeaders
+        );
+      }
+
+      // ── MODE: detail ─────────────────────────────────────────────────
+      if (mode === "detail") {
+        const id = parseInt(searchParams.get("id"));
+        if (!id || isNaN(id)) {
+          return respond(
+            { data: null, success: false, error: "ID produk tidak valid" },
+            corsHeaders
+          );
+        }
+
+        const { data, error } = await supabase
+          .from("produk")
+          .select("*, kategori(nama_kategori)")
+          .eq("id", id)
+          .single();
+
+        if (error) {
+          return respond(
+            { data: null, success: false, error: "Produk tidak ditemukan" },
+            corsHeaders
+          );
+        }
+
+        return respond({ data, success: true }, corsHeaders);
+      }
+
+      // ── MODE: default / legacy ───────────────────────────────────────
+      let query = supabase
+        .from("produk")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (limitParam && !isNaN(limitParam)) query = query.limit(limitParam);
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return respond({ data, success: true }, corsHeaders);
     } catch (error) {
-        console.error('Error:', error);
-        return {
-            statusCode: 500,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({ error: error.message, success: false })
-        };
+      console.error("Error:", error);
+      return new Response(
+        JSON.stringify({ error: error.message, success: false }),
+        { status: 500, headers: corsHeaders }
+      );
     }
+  },
 };
 
-function respond(body) {
-    return {
-        statusCode: 200,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify(body)
-    };
+function respond(body, headers) {
+  return new Response(JSON.stringify(body), { status: 200, headers });
 }
