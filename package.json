@@ -11,5 +11,8 @@
     "supabase"
   ],
   "author": "ian jeki",
-  "license": "arrahman islamic center"
+  "license": "arrahman islamic center",
+  "devDependencies": {
+    "wrangler": "^4.99.0"
+  }
 }
