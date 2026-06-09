@@ -44,7 +44,7 @@
         position: relative;
         background-image: url("/hero-bg.jpg");
         background-size: cover;
-        background-position: center center;
+        background-position: center 35%;
         background-repeat: no-repeat;
         /* Fallback kalau foto belum ada */
         background-color: var(--color-primary);
@@ -158,16 +158,16 @@
   <body>
     <!-- Navbar -->
     <div class="sticky top-0 z-50 bg-white shadow-md">
-    <div id="navbar"></div>
+      <div id="navbar"></div>
     </div>
     <script src="/navbar.js"></script>
 
     <!-- Hero Section -->
     <section
       class="hero-bg"
-      style="min-height: 50vh; display: flex; align-items: flex-end"
+      style="min-height: 45vh; display: flex; align-items: center"
     >
-      <div class="container mx-auto px-6 pb-12 pt-32">
+      <div class="container mx-auto px-6 py-12">
         <h1 class="text-4xl md:text-5xl font-bold text-white mb-3">
           Kesehatan Anda Prioritas Kami
         </h1>
@@ -177,12 +177,9 @@
         >
           Alat medis berkualitas dengan harga terbaik
         </p>
-        <a
-          href="katalog_produk.html"
-          class="btn-primary px-8 py-3 rounded-full inline-flex items-center space-x-2 shadow-lg"
-        >
-          <span>Lihat Katalog</span>
-          <i class="fas fa-arrow-right"></i>
+        <a href="katalog_produk.html" class="bg-white text-primary hover:bg-blue-50 font-extrabold px-8 py-3.5 rounded-full inline-flex items-center space-x-2 shadow-lg transition-all transform hover:scale-105 duration-200">
+            <span>Lihat Katalog</span>
+            <i class="fas fa-arrow-right"></i>
         </a>
       </div>
     </section>
@@ -211,11 +208,9 @@
         <h2 class="text-2xl font-bold section-title flex items-center">
           <i class="fas fa-clock section-title-icon mr-2"></i> Produk Terbaru
         </h2>
-        <a
-          href="katalog_produk.html"
-          class="text-sm font-semibold text-primary hover:underline flex items-center gap-1"
-        >
-          Lihat semua <i class="fas fa-arrow-right text-xs"></i>
+        <a href="katalog_produk.html" class="bg-blue-600 text-white hover:bg-blue-700 text-xs font-bold px-4 py-2 rounded-lg shadow-sm flex items-center gap-2 transition-colors">
+            <span>Lihat Semua</span>
+            <i class="fas fa-arrow-right text-[10px]"></i>
         </a>
       </div>
       <div
