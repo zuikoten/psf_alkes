@@ -298,7 +298,7 @@
       // ── Fetch categories (unchanged) ───────────────────────────────────
       async function loadCategories() {
         try {
-          const res = await fetch("/./functions/get-categories");
+          const res = await fetch("/functions/get-categories");
           const { categories, error } = await res.json();
           if (error) throw new Error(error);
 
@@ -338,7 +338,7 @@
         });
 
         try {
-          const res = await fetch(`/./functions/get-products?${params}`);
+          const res = await fetch(`/functions/get-products?${params}`);
           const json = await res.json();
 
           if (!json.success) throw new Error(json.error || "Gagal memuat");

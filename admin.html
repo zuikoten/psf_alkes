@@ -649,7 +649,7 @@
       // ── Login ──────────────────────────────────────────────────────────────
       async function checkPassword() {
         const password = document.getElementById("passwordInput").value;
-        const res = await fetch("/./functions/check-password", {
+        const res = await fetch("/functions/check-password", {
           method: "POST",
           body: JSON.stringify({ password }),
         });
@@ -695,7 +695,7 @@
           headers: { "Content-Type": "application/json" },
         };
         if (body) options.body = JSON.stringify(body);
-        const res = await fetch(`/./functions/${endpoint}`, options);
+        const res = await fetch(`/functions/${endpoint}`, options);
         return await res.json();
       }
 
@@ -928,7 +928,7 @@
 
         try {
           const res = await fetch(
-            `/./functions/admin-products?${params}`,
+            `/functions/admin-products?${params}`,
           );
           const result = await res.json();
           if (result.error) throw new Error(result.error);
@@ -1131,7 +1131,7 @@
       async function editProduct(id) {
         try {
           const res = await fetch(
-            `/./functions/admin-products?id=${id}`,
+            `/functions/admin-products?id=${id}`,
           );
           const result = await res.json();
           const product = Array.isArray(result.data)
