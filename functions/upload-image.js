@@ -1,5 +1,26 @@
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+// ── FUNGSI HELPER: VALIDASI TOKEN KOBEI ────────────────────────────────
+function checkAuth(request, env) {
+  const tokenDariAdmin = request.headers.get("Authorization");
+  if (!tokenDariAdmin || tokenDariAdmin !== env.ADMIN_PASSWORD) {
+    return json({ error: "Akses Ditolak! Sesi tidak valid." }, 401);
+  }
+  return null; // Lolos validasi
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
+
+  // 1. JALANKAN PROTEKSI TOKEN DI BARIS PERTAMA
+  const authError = checkAuth(request, env);
+  if (authError) return authError;
+
   const supabaseUrl = env.SUPABASE_URL;
   const supabaseAnonKey = env.SUPABASE_ANON_KEY;
 
@@ -45,11 +66,4 @@ export async function onRequestPost(context) {
     console.error("Error:", error);
     return json({ error: error.message }, 500);
   }
-}
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json" },
-  });
 }

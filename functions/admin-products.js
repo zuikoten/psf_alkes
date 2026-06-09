@@ -13,6 +13,15 @@ function json(data, status = 200) {
   });
 }
 
+// ── FUNGSI BARU: HELPER VALIDASI TOKEN KOBEI ───────────────────────────
+function checkAuth(request, env) {
+  const tokenDariAdmin = request.headers.get("Authorization");
+  if (!tokenDariAdmin || tokenDariAdmin !== env.ADMIN_PASSWORD) {
+    return json({ error: "Akses Ditolak! Sesi tidak valid." }, 401);
+  }
+  return null; // Null berarti aman / lolos validasi
+}
+
 function extractStoragePath(url) {
   if (!url) return null;
   const marker = "/object/public/";
@@ -43,6 +52,11 @@ export async function onRequestOptions() {
 // ── GET ────────────────────────────────────────────────────────────────
 export async function onRequestGet(context) {
   const { request, env } = context;
+
+  // 1. TAMBAHKAN PROTEKSI DI SINI
+  const authError = checkAuth(request, env);
+  if (authError) return authError;
+
   const headers = makeDbHeaders(env.SUPABASE_ANON_KEY);
   const { searchParams } = new URL(request.url);
 
@@ -63,7 +77,7 @@ export async function onRequestGet(context) {
   const from     = (page - 1) * limit;
 
   let qs = `select=*&order=is_featured.desc,nama.asc&offset=${from}&limit=${limit}`;
-  if (search)                            qs += `&nama=ilike.*${encodeURIComponent(search)}*`;
+  if (search)                             qs += `&nama=ilike.*${encodeURIComponent(search)}*`;
   if (kategori && kategori !== "all")    qs += `&kategori_id=eq.${parseInt(kategori)}`;
   if (featured === "true")               qs += `&is_featured=eq.true`;
 
@@ -85,6 +99,11 @@ export async function onRequestGet(context) {
 // ── POST ───────────────────────────────────────────────────────────────
 export async function onRequestPost(context) {
   const { request, env } = context;
+
+  // 2. TAMBAHKAN PROTEKSI DI SINI
+  const authError = checkAuth(request, env);
+  if (authError) return authError;
+
   const headers = makeDbHeaders(env.SUPABASE_ANON_KEY);
   const product = await request.json();
 
@@ -99,6 +118,11 @@ export async function onRequestPost(context) {
 // ── PUT ────────────────────────────────────────────────────────────────
 export async function onRequestPut(context) {
   const { request, env } = context;
+
+  // 3. TAMBAHKAN PROTEKSI DI SINI
+  const authError = checkAuth(request, env);
+  if (authError) return authError;
+
   const headers = makeDbHeaders(env.SUPABASE_ANON_KEY);
   const { id, ...updates } = await request.json();
 
@@ -129,6 +153,11 @@ export async function onRequestPut(context) {
 // ── DELETE ─────────────────────────────────────────────────────────────
 export async function onRequestDelete(context) {
   const { request, env } = context;
+
+  // 4. TAMBAHKAN PROTEKSI DI SINI
+  const authError = checkAuth(request, env);
+  if (authError) return authError;
+
   const headers = makeDbHeaders(env.SUPABASE_ANON_KEY);
   const { id } = await request.json();
 

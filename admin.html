@@ -655,6 +655,9 @@
         });
         const { ok } = await res.json();
         if (ok) {
+          // Simpan password sementara di browser admin
+          sessionStorage.setItem("admin_secret", password);
+
           document.getElementById("loginScreen").style.display = "none";
           document.getElementById("adminDashboard").style.display = "block";
           loadCategories();
@@ -688,11 +691,16 @@
         else loadCategoriesList();
       }
 
-      // ── API helper ─────────────────────────────────────────────────────────
+      // ── API helper (protected token) ───────────────────────────────────
       async function apiCall(endpoint, method, body = null) {
+        const token = sessionStorage.getItem("admin_secret") || "";
+
         const options = {
           method,
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": token
+          },
         };
         if (body) options.body = JSON.stringify(body);
         const res = await fetch(`/${endpoint}`, options);
@@ -927,9 +935,14 @@
         });
 
         try {
+          const token = sessionStorage.getItem("admin_secret") || "";
           const res = await fetch(
-            `/admin-products?${params}`,
-          );
+            `/admin-products?${params}`,{
+              method: "GET",
+              headers: {
+                  "Authorization": token
+              }
+            });
           const result = await res.json();
           if (result.error) throw new Error(result.error);
 
@@ -1130,9 +1143,14 @@
 
       async function editProduct(id) {
         try {
+          const token = sessionStorage.getItem("admin_secret") || "";
           const res = await fetch(
-            `/admin-products?id=${id}`,
-          );
+            `/admin-products?id=${id}`,{
+              method: "GET",
+              headers: {
+                  "Authorization": token // <-- Tambahkan header ini
+              }
+            });
           const result = await res.json();
           const product = Array.isArray(result.data)
             ? result.data[0]
