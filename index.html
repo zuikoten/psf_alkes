@@ -228,7 +228,7 @@
         async function loadFeaturedProducts() {
             const container = document.getElementById('featured-products');
             try {
-                const res = await fetch('/.netlify/functions/get-products?mode=unggulan&limit=4');
+                const res = await fetch('/./functions/get-products?mode=unggulan&limit=4');
                 const { data: products, error } = await res.json();
 
                 if (error) throw new Error(error);
@@ -250,7 +250,7 @@
         async function loadNewProducts() {
             const container = document.getElementById('new-products');
             try {
-                const res = await fetch('/.netlify/functions/get-products?mode=terbaru&limit=6');
+                const res = await fetch('/./functions/get-products?mode=terbaru&limit=6');
                 const { data: products, error } = await res.json();
 
                 if (error) throw new Error(error);

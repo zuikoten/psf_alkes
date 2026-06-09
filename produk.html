@@ -274,7 +274,7 @@
             if (!productId || isNaN(productId)) { showError(); return; }
 
             try {
-                const res  = await fetch(`/.netlify/functions/get-products?mode=detail&id=${productId}`);
+                const res  = await fetch(`/./functions/get-products?mode=detail&id=${productId}`);
                 const json = await res.json();
 
                 if (!json.success || !json.data) { showError(); return; }
