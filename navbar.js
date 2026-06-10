@@ -145,7 +145,7 @@
                         <i class="fas fa-hospital-user"></i>
                     </div>
                     <div class="psf-brand-text">
-                        <span class="psf-brand-name">PSF Alkes</span>
+                        <span class="psf-brand-name">PSF Medika</span>
                         <span class="psf-brand-sub">Alat Kesehatan Profesional</span>
                     </div>
                 </a>

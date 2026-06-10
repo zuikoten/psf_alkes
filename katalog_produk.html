@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Katalog Produk - PSF Alkes</title>
+    <title>Katalog Produk - PSF Medika</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
@@ -240,7 +240,7 @@
     <footer class="footer text-white py-8 mt-12">
       <div class="container mx-auto px-4 text-center">
         <p class="font-semibold">
-          &copy; 2026 PSF Alkes - Toko Alat Kesehatan Terpercaya
+          &copy; 2026 PSF MEdika - Toko Alat Kesehatan Terpercaya
         </p>
         <p class="text-sm footer-sub mt-1">
           Melayani kebutuhan medis rumah sakit, klinik, dan pribadi
@@ -495,7 +495,7 @@
       // ── WhatsApp order ─────────────────────────────────────────────────
       window.orderViaWhatsApp = function (namaProduk, harga) {
         const phoneNumber = "628211537138";
-        const message = `Halo PSF Alkes,%0A%0ASaya ingin memesan produk berikut:%0A*${encodeURIComponent(namaProduk)}*%0AHarga: Rp ${harga.toLocaleString("id-ID")}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
+        const message = `Halo PSF Medika,%0A%0ASaya ingin memesan produk berikut:%0A*${encodeURIComponent(namaProduk)}*%0AHarga: Rp ${harga.toLocaleString("id-ID")}%0A%0ATolong informasi lebih lanjut untuk pembayaran dan pengiriman. Terima kasih.`;
         window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
       };
 
