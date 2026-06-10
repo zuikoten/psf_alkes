@@ -655,7 +655,6 @@
         });
         const { ok } = await res.json();
         if (ok) {
-          // Simpan password sementara di browser admin
           sessionStorage.setItem("admin_secret", password);
 
           document.getElementById("loginScreen").style.display = "none";
@@ -697,9 +696,9 @@
 
         const options = {
           method,
-          headers: { 
+          headers: {
             "Content-Type": "application/json",
-            "Authorization": token
+            Authorization: token,
           },
         };
         if (body) options.body = JSON.stringify(body);
@@ -936,13 +935,12 @@
 
         try {
           const token = sessionStorage.getItem("admin_secret") || "";
-          const res = await fetch(
-            `/admin-products?${params}`,{
-              method: "GET",
-              headers: {
-                  "Authorization": token
-              }
-            });
+          const res = await fetch(`/admin-products?${params}`, {
+            method: "GET",
+            headers: {
+              Authorization: token,
+            },
+          });
           const result = await res.json();
           if (result.error) throw new Error(result.error);
 
@@ -1126,6 +1124,7 @@
         document.getElementById("productId").value = "";
         document.getElementById("is_featured").checked = false;
         document.getElementById("currentImage").classList.add("hidden");
+        document.getElementById("currentImagePreview").dataset.originalUrl = "";
         document.getElementById("productModalTitle").innerText =
           "Tambah Produk";
 
@@ -1144,13 +1143,12 @@
       async function editProduct(id) {
         try {
           const token = sessionStorage.getItem("admin_secret") || "";
-          const res = await fetch(
-            `/admin-products?id=${id}`,{
-              method: "GET",
-              headers: {
-                  "Authorization": token // <-- Tambahkan header ini
-              }
-            });
+          const res = await fetch(`/admin-products?id=${id}`, {
+            method: "GET",
+            headers: {
+              Authorization: token, // <-- Tambahkan header ini
+            },
+          });
           const result = await res.json();
           const product = Array.isArray(result.data)
             ? result.data[0]
@@ -1171,8 +1169,10 @@
           if (product.gambar_url) {
             document.getElementById("currentImagePreview").src =
               product.gambar_url;
+            document.getElementById("currentImagePreview").dataset.originalUrl = product.gambar_url;
             document.getElementById("currentImage").classList.remove("hidden");
           } else {
+            document.getElementById("currentImagePreview").dataset.originalUrl = "";
             document.getElementById("currentImage").classList.add("hidden");
           }
 
@@ -1223,9 +1223,8 @@
           const deskripsi = quillIsEmpty() ? null : quill.root.innerHTML;
 
           try {
-            let gambarUrl =
-              document.getElementById("currentImagePreview").src || null;
-            if (gambarUrl && !gambarUrl.startsWith("http")) gambarUrl = null;
+            const originalUrl = document.getElementById("currentImagePreview").dataset.originalUrl || null;
+            let gambarUrl = originalUrl;
 
             if (gambarFile) {
               Swal.fire({
