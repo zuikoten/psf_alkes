@@ -1,223 +1,282 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kontak - PSF Medika</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <style>
-        :root {
-            --color-primary:        #1565C0;
-            --color-primary-dark:   #0D47A1;
-            --color-secondary:      #4A9FE8;
-            --color-light:          #90CAF9;
-            --color-soft:           #E3F2FD;
-            --color-text-primary:   #1565C0;
-            --color-text-muted:     #6B7280;
-            --color-bg-page:        #F5F9FF;
-            --color-white:          #FFFFFF;
-            --color-email-bg:       #EA4335;
-            --color-email-hover:    #C5221F;
-        }
+      :root {
+        --color-primary: #1565c0;
+        --color-primary-dark: #0d47a1;
+        --color-secondary: #4a9fe8;
+        --color-light: #90caf9;
+        --color-soft: #e3f2fd;
+        --color-text-primary: #1565c0;
+        --color-text-muted: #6b7280;
+        --color-bg-page: #f5f9ff;
+        --color-white: #ffffff;
+        --color-email-bg: #ea4335;
+        --color-email-hover: #c5221f;
+      }
 
-        body                { background-color: var(--color-bg-page); }
-        .text-primary       { color: var(--color-text-primary); }
-        .text-muted         { color: var(--color-text-muted); }
-        .bg-soft            { background-color: var(--color-soft); }
+      body {
+        background-color: var(--color-bg-page);
+      }
+      .text-primary {
+        color: var(--color-text-primary);
+      }
+      .text-muted {
+        color: var(--color-text-muted);
+      }
+      .bg-soft {
+        background-color: var(--color-soft);
+      }
 
-        .hero-bg {
-            background: linear-gradient(160deg, var(--color-primary) 0%, var(--color-secondary) 60%, var(--color-light) 100%);
-        }
+      .hero-bg {
+        background: linear-gradient(
+          160deg,
+          var(--color-primary) 0%,
+          var(--color-secondary) 60%,
+          var(--color-light) 100%
+        );
+      }
 
-        .card {
-            background: var(--color-white);
-            border: 1px solid var(--color-soft);
-            border-radius: 12px;
-        }
+      .card {
+        background: var(--color-white);
+        border: 1px solid var(--color-soft);
+        border-radius: 12px;
+      }
 
-        .icon-box {
-            width: 52px;
-            height: 52px;
-            background: var(--color-soft);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-primary);
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
+      .icon-box {
+        width: 52px;
+        height: 52px;
+        background: var(--color-soft);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-primary);
+        font-size: 1.25rem;
+        flex-shrink: 0;
+      }
 
-        .btn-whatsapp {
-            background-color: #25D366;
-            color: white;
-            transition: background-color 0.2s;
-        }
-        .btn-whatsapp:hover  { background-color: #1EBE5A; }
+      .btn-whatsapp {
+        background-color: #25d366;
+        color: white;
+        transition: background-color 0.2s;
+      }
+      .btn-whatsapp:hover {
+        background-color: #1ebe5a;
+      }
 
-        .btn-email {
-            background-color: #EA4335;
-            color: white;
-            transition: background-color 0.2s;
-        }
-        .btn-email:hover {
-            background-color: #C5221F;
-        }
+      .btn-email {
+        background-color: #ea4335;
+        color: white;
+        transition: background-color 0.2s;
+      }
+      .btn-email:hover {
+        background-color: #c5221f;
+      }
 
-        .btn-primary {
-            background-color: var(--color-primary);
-            color: white;
-            transition: background-color 0.2s;
-        }
-        .btn-primary:hover   { background-color: var(--color-primary-dark); }
+      .btn-primary {
+        background-color: var(--color-primary);
+        color: white;
+        transition: background-color 0.2s;
+      }
+      .btn-primary:hover {
+        background-color: var(--color-primary-dark);
+      }
 
-        .jam-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--color-soft);
-            font-size: 0.9rem;
-        }
-        .jam-row:last-child  { border-bottom: none; }
-        .jam-label           { color: #374151; }
-        .jam-value           { color: var(--color-primary); font-weight: 600; }
-        .jam-tutup           { color: #DC2626; font-weight: 600; }
+      .jam-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--color-soft);
+        font-size: 0.9rem;
+      }
+      .jam-row:last-child {
+        border-bottom: none;
+      }
+      .jam-label {
+        color: #374151;
+      }
+      .jam-value {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+      .jam-tutup {
+        color: #dc2626;
+        font-weight: 600;
+      }
 
-        .footer              { background-color: var(--color-primary-dark, #0D47A1); }
-        .footer-sub          { color: var(--color-light); }
+      .footer {
+        background-color: var(--color-primary-dark, #0d47a1);
+      }
+      .footer-sub {
+        color: var(--color-light);
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="sticky top-0 z-50 bg-white shadow-md">
-    <div id="navbar"></div>
+      <div id="navbar"></div>
     </div>
     <script src="/navbar.js"></script>
 
     <!-- Hero -->
     <section class="hero-bg py-16">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl font-bold text-white mb-3">Hubungi Kami</h1>
-            <p class="text-lg" style="color: rgba(255,255,255,0.85);">Kami siap membantu kebutuhan alat kesehatan Anda</p>
-        </div>
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl font-bold text-white mb-3">Hubungi Kami</h1>
+        <p class="text-lg" style="color: rgba(255, 255, 255, 0.85)">
+          Kami siap membantu kebutuhan alat kesehatan Anda
+        </p>
+      </div>
     </section>
 
     <div class="container mx-auto px-4 py-12 max-w-4xl">
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <!-- WhatsApp -->
-            <div class="card p-6 shadow-sm">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="icon-box"><i class="fab fa-whatsapp"></i></div>
-                    <h2 class="text-lg font-bold text-primary">WhatsApp</h2>
-                </div>
-                <p class="text-muted text-sm mb-3">Cara tercepat untuk tanya produk, cek stok, atau pemesanan</p>
-                <p class="text-2xl font-bold text-gray-800 mb-4">+62 821-1537-138</p>
-                <a href="https://wa.me/628211537138" target="_blank"
-                   class="btn-whatsapp w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold">
-                    <i class="fab fa-whatsapp"></i> Chat Sekarang
-                </a>
-            </div>
-
-            <!-- Email (BARU) -->
-            <div class="card p-6 shadow-sm">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="icon-box"><i class="fas fa-envelope"></i></div>
-                    <h2 class="text-lg font-bold text-primary">Email</h2>
-                </div>
-                <p class="text-muted text-sm mb-3">Untuk kerja sama, komplain, atau pertanyaan umum</p>
-                <!-- GANTI: alamat email sesuai keperluan -->
-                <p class="text-xl font-bold text-gray-800 mb-4 break-all">cs@psfmedika.com</p>
-                <a href="mailto:cs@psfmedika.com?subject=Halo%20PSF%20Medika&body=Saya%20ingin%20menanyakan..."
-                   class="btn-email w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold">
-                    <i class="fas fa-envelope"></i> Kirim Email
-                </a>
-            </div>
-        </div>
-
-        <!-- Alamat (dipindah ke baris sendiri, full width) -->
-        <div class="grid grid-cols-1 gap-6 mb-6">
-            <div class="card p-6 shadow-sm">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
-                    <h2 class="text-lg font-bold text-primary">Alamat</h2>
-                </div>
-                <!-- GANTI: alamat lengkap -->
-                <p class="text-gray-700 leading-relaxed mb-4">
-                    Jl. [Nama Jalan] No. [Nomor]<br>
-                    [Kelurahan], [Kecamatan]<br>
-                    [Kota/Kabupaten], [Provinsi] [Kode Pos]
-                </p>
-                <!-- GANTI: link Google Maps embed atau directions -->
-                <a href="https://maps.google.com" target="_blank"
-                   class="btn-primary w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold">
-                    <i class="fas fa-map"></i> Lihat di Maps
-                </a>
-            </div>
-        </div>
-
-        <!-- Jam Operasional -->
-        <div class="card p-6 shadow-sm mb-6">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="icon-box"><i class="fas fa-clock"></i></div>
-                <h2 class="text-lg font-bold text-primary">Jam Operasional</h2>
-            </div>
-            <!-- GANTI: sesuaikan jam operasional -->
-            <div class="jam-row">
-                <span class="jam-label">Senin – Jumat</span>
-                <span class="jam-value">08.00 – 17.00 WIB</span>
-            </div>
-            <div class="jam-row">
-                <span class="jam-label">Sabtu</span>
-                <span class="jam-value">08.00 – 13.00 WIB</span>
-            </div>
-            <div class="jam-row">
-                <span class="jam-label">Minggu & Hari Libur</span>
-                <span class="jam-tutup">Tutup</span>
-            </div>
-        </div>
-
-        <!-- Info tambahan -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- WhatsApp -->
         <div class="card p-6 shadow-sm">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="icon-box"><i class="fas fa-info-circle"></i></div>
-                <h2 class="text-lg font-bold text-primary">Informasi Lainnya</h2>
-            </div>
-            <ul class="space-y-3 text-gray-700 text-sm">
-                <li class="flex items-start gap-2">
-                    <i class="fas fa-check text-primary mt-0.5"></i>
-                    Pemesanan bisa dilakukan via WhatsApp kapan saja, akan dibalas pada jam operasional
-                </li>
-                <li class="flex items-start gap-2">
-                    <i class="fas fa-check text-primary mt-0.5"></i>
-                    <!-- GANTI: info pengiriman -->
-                    Melayani pengiriman ke seluruh Indonesia via [ekspedisi]
-                </li>
-                <li class="flex items-start gap-2">
-                    <i class="fas fa-check text-primary mt-0.5"></i>
-                    <!-- GANTI: info pembayaran -->
-                    Pembayaran via transfer bank [nama bank] atau COD untuk area [wilayah]
-                </li>
-                <li class="flex items-start gap-2">
-                    <i class="fas fa-check text-primary mt-0.5"></i>
-                    Email dibalas maksimal 1x24 jam pada hari kerja
-                </li>
-            </ul>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="icon-box"><i class="fab fa-whatsapp"></i></div>
+            <h2 class="text-lg font-bold text-primary">WhatsApp</h2>
+          </div>
+          <p class="text-muted text-sm mb-3">
+            Cara tercepat untuk tanya produk, cek stok, atau pemesanan
+          </p>
+          <p class="text-2xl font-bold text-gray-800 mb-4">+62 821-1537-138</p>
+          <a
+            href="https://wa.me/628211537138"
+            target="_blank"
+            class="btn-whatsapp w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold"
+          >
+            <i class="fab fa-whatsapp"></i> Chat Sekarang
+          </a>
         </div>
 
+        <!-- Email (BARU) -->
+        <div class="card p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="icon-box"><i class="fas fa-envelope"></i></div>
+            <h2 class="text-lg font-bold text-primary">Email</h2>
+          </div>
+          <p class="text-muted text-sm mb-3">
+            Untuk kerja sama, komplain, atau pertanyaan umum
+          </p>
+          <!-- GANTI: alamat email sesuai keperluan -->
+          <p class="text-xl font-bold text-gray-800 mb-4 break-all">
+            admin@psfmedika.com
+          </p>
+          <a
+            href="mailto:adimn@psfmedika.com?subject=Halo%20PSF%20Medika&body=Saya%20ingin%20menanyakan..."
+            class="btn-email w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold"
+          >
+            <i class="fas fa-envelope"></i> Kirim Email
+          </a>
+        </div>
+      </div>
+
+      <!-- Alamat (dipindah ke baris sendiri, full width) -->
+      <div class="grid grid-cols-1 gap-6 mb-6">
+        <div class="card p-6 shadow-sm">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
+            <h2 class="text-lg font-bold text-primary">Alamat</h2>
+          </div>
+          <!-- GANTI: alamat lengkap -->
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Jl. [Nama Jalan] No. [Nomor]<br />
+            [Kelurahan], [Kecamatan]<br />
+            [Kota/Kabupaten], [Provinsi] [Kode Pos]
+          </p>
+          <!-- GANTI: link Google Maps embed atau directions -->
+          <a
+            href="https://maps.google.com"
+            target="_blank"
+            class="btn-primary w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold"
+          >
+            <i class="fas fa-map"></i> Lihat di Maps
+          </a>
+        </div>
+      </div>
+
+      <!-- Jam Operasional -->
+      <div class="card p-6 shadow-sm mb-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="icon-box"><i class="fas fa-clock"></i></div>
+          <h2 class="text-lg font-bold text-primary">Jam Operasional</h2>
+        </div>
+        <!-- GANTI: sesuaikan jam operasional -->
+        <div class="jam-row">
+          <span class="jam-label">Senin – Jumat</span>
+          <span class="jam-value">08.00 – 17.00 WIB</span>
+        </div>
+        <div class="jam-row">
+          <span class="jam-label">Sabtu</span>
+          <span class="jam-value">08.00 – 13.00 WIB</span>
+        </div>
+        <div class="jam-row">
+          <span class="jam-label">Minggu & Hari Libur</span>
+          <span class="jam-tutup">Tutup</span>
+        </div>
+      </div>
+
+      <!-- Info tambahan -->
+      <div class="card p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="icon-box"><i class="fas fa-info-circle"></i></div>
+          <h2 class="text-lg font-bold text-primary">Informasi Lainnya</h2>
+        </div>
+        <ul class="space-y-3 text-gray-700 text-sm">
+          <li class="flex items-start gap-2">
+            <i class="fas fa-check text-primary mt-0.5"></i>
+            Pemesanan bisa dilakukan via WhatsApp kapan saja, akan dibalas pada
+            jam operasional
+          </li>
+          <li class="flex items-start gap-2">
+            <i class="fas fa-check text-primary mt-0.5"></i>
+            <!-- GANTI: info pengiriman -->
+            Melayani pengiriman ke seluruh Indonesia via [ekspedisi]
+          </li>
+          <li class="flex items-start gap-2">
+            <i class="fas fa-check text-primary mt-0.5"></i>
+            <!-- GANTI: info pembayaran -->
+            Pembayaran via transfer bank [nama bank] atau COD untuk area
+            [wilayah]
+          </li>
+          <li class="flex items-start gap-2">
+            <i class="fas fa-check text-primary mt-0.5"></i>
+            Email dibalas maksimal 1x24 jam pada hari kerja
+          </li>
+        </ul>
+      </div>
     </div>
 
     <footer class="footer text-white py-8 mt-4">
-        <div class="container mx-auto px-4 text-center">
-            <p class="font-semibold">&copy; 2026 PSF Medika - Toko Alat Kesehatan Terpercaya</p>
-            <p class="text-sm footer-sub mt-1">Melayani kebutuhan medis rumah sakit, klinik, dan pribadi</p>
-            <div class="border-t border-blue-700 mt-4 pt-4">
-                <p class="text-sm footer-sub">part of <span class="font-semibold text-white">Group of PT. Hatamed Industri Utama</span></p>
-                <p class="text-xs footer-sub mt-1">Izin Kemenkes RI &middot; AKD 21603129105</p>
-            </div>
+      <div class="container mx-auto px-4 text-center">
+        <p class="font-semibold">
+          &copy; 2026 PSF Medika - Toko Alat Kesehatan Terpercaya
+        </p>
+        <p class="text-sm footer-sub mt-1">
+          Melayani kebutuhan medis rumah sakit, klinik, dan pribadi
+        </p>
+        <div class="border-t border-blue-700 mt-4 pt-4">
+          <p class="text-sm footer-sub">
+            part of
+            <span class="font-semibold text-white"
+              >Group of PT. Hatamed Industri Utama</span
+            >
+          </p>
+          <p class="text-xs footer-sub mt-1">
+            Izin Kemenkes RI &middot; AKD 21603129105
+          </p>
         </div>
+      </div>
     </footer>
-
-</body>
+  </body>
 </html>
