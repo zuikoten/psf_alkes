@@ -17,6 +17,8 @@
             --color-text-muted:     #6B7280;
             --color-bg-page:        #F5F9FF;
             --color-white:          #FFFFFF;
+            --color-email-bg:       #EA4335;
+            --color-email-hover:    #C5221F;
         }
 
         body                { background-color: var(--color-bg-page); }
@@ -53,6 +55,15 @@
             transition: background-color 0.2s;
         }
         .btn-whatsapp:hover  { background-color: #1EBE5A; }
+
+        .btn-email {
+            background-color: #EA4335;
+            color: white;
+            transition: background-color 0.2s;
+        }
+        .btn-email:hover {
+            background-color: #C5221F;
+        }
 
         .btn-primary {
             background-color: var(--color-primary);
@@ -95,7 +106,6 @@
     <div class="container mx-auto px-4 py-12 max-w-4xl">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-
             <!-- WhatsApp -->
             <div class="card p-6 shadow-sm">
                 <div class="flex items-center gap-3 mb-4">
@@ -103,7 +113,6 @@
                     <h2 class="text-lg font-bold text-primary">WhatsApp</h2>
                 </div>
                 <p class="text-muted text-sm mb-3">Cara tercepat untuk tanya produk, cek stok, atau pemesanan</p>
-                <!-- GANTI: nomor WhatsApp -->
                 <p class="text-2xl font-bold text-gray-800 mb-4">+62 821-1537-138</p>
                 <a href="https://wa.me/628211537138" target="_blank"
                    class="btn-whatsapp w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold">
@@ -111,7 +120,24 @@
                 </a>
             </div>
 
-            <!-- Alamat -->
+            <!-- Email (BARU) -->
+            <div class="card p-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                    <h2 class="text-lg font-bold text-primary">Email</h2>
+                </div>
+                <p class="text-muted text-sm mb-3">Untuk kerja sama, komplain, atau pertanyaan umum</p>
+                <!-- GANTI: alamat email sesuai keperluan -->
+                <p class="text-xl font-bold text-gray-800 mb-4 break-all">cs@psfmedika.com</p>
+                <a href="mailto:cs@psfmedika.com?subject=Halo%20PSF%20Medika&body=Saya%20ingin%20menanyakan..."
+                   class="btn-email w-full py-2 rounded-lg flex items-center justify-center gap-2 font-semibold">
+                    <i class="fas fa-envelope"></i> Kirim Email
+                </a>
+            </div>
+        </div>
+
+        <!-- Alamat (dipindah ke baris sendiri, full width) -->
+        <div class="grid grid-cols-1 gap-6 mb-6">
             <div class="card p-6 shadow-sm">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
@@ -129,7 +155,6 @@
                     <i class="fas fa-map"></i> Lihat di Maps
                 </a>
             </div>
-
         </div>
 
         <!-- Jam Operasional -->
@@ -173,6 +198,10 @@
                     <i class="fas fa-check text-primary mt-0.5"></i>
                     <!-- GANTI: info pembayaran -->
                     Pembayaran via transfer bank [nama bank] atau COD untuk area [wilayah]
+                </li>
+                <li class="flex items-start gap-2">
+                    <i class="fas fa-check text-primary mt-0.5"></i>
+                    Email dibalas maksimal 1x24 jam pada hari kerja
                 </li>
             </ul>
         </div>
