@@ -147,9 +147,7 @@
         <nav class="psf-navbar">
             <div class="psf-navbar-inner">
                 <a href="index.html" class="psf-brand">
-                    <div class="psf-brand-icon">
                         <img src="/images/logo-psfmedika.png" alt="PSF Medika" class="psf-brand-logo">
-                    </div>
                     <div class="psf-brand-text">
                         <span class="psf-brand-name">PSF Medika</span>
                         <span class="psf-brand-sub">Alat Kesehatan Profesional</span>
