@@ -1,80 +1,86 @@
 (function () {
-    // ── State ──────────────────────────────────────────────────────────
-    let categories = [];
+  // ── State ──────────────────────────────────────────────────────────
+  let categories = [];
 
-    // ── Helper Functions ──────────────────────────────────────────────
-    function escapeHtml(str) {
-        if (!str) return '';
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        };
-        return str.replace(/[&<>"']/g, function(m) { return map[m]; });
+  // ── Helper Functions ──────────────────────────────────────────────
+  function escapeHtml(str) {
+    if (!str) return "";
+    const map = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+    return str.replace(/[&<>"']/g, function (m) {
+      return map[m];
+    });
+  }
+
+  // ── Format Rupiah ──────────────────────────────────────────────────
+  function formatRupiah(number) {
+    return new Intl.NumberFormat("id-ID").format(number);
+  }
+
+  // ── Fetch Categories from Server ──────────────────────────────────
+  async function fetchCategories() {
+    try {
+      const response = await fetch("/get-categories");
+      const data = await response.json();
+
+      if (data.success && data.categories) {
+        // Data sudah terurut dari server berdasarkan produk_count
+        // Ambil 6 kategori dengan produk terbanyak
+        categories = data.categories.slice(0, 6);
+        return true;
+      } else {
+        throw new Error(data.error || "Gagal memuat kategori");
+      }
+    } catch (error) {
+      console.error("Error loading categories:", error);
+      // Fallback ke kategori statis
+      categories = [
+        { id: 1, nama_kategori: "Alat Diagnostik", produk_count: 12 },
+        { id: 2, nama_kategori: "Alat Bedah", produk_count: 8 },
+        { id: 3, nama_kategori: "APD", produk_count: 15 },
+        { id: 4, nama_kategori: "Alat Laboratorium", produk_count: 10 },
+        { id: 5, nama_kategori: "Alat Bantu Jalan", produk_count: 6 },
+        { id: 6, nama_kategori: "Disposable", produk_count: 20 },
+      ];
+      return false;
     }
+  }
 
-    // ── Format Rupiah ──────────────────────────────────────────────────
-    function formatRupiah(number) {
-        return new Intl.NumberFormat('id-ID').format(number);
-    }
-
-    // ── Fetch Categories from Server ──────────────────────────────────
-    async function fetchCategories() {
-        try {
-            const response = await fetch('/get-categories');
-            const data = await response.json();
-            
-            if (data.success && data.categories) {
-                // Data sudah terurut dari server berdasarkan produk_count
-                // Ambil 6 kategori dengan produk terbanyak
-                categories = data.categories.slice(0, 6);
-                return true;
-            } else {
-                throw new Error(data.error || 'Gagal memuat kategori');
-            }
-        } catch (error) {
-            console.error('Error loading categories:', error);
-            // Fallback ke kategori statis
-            categories = [
-                { id: 1, nama_kategori: 'Alat Diagnostik', produk_count: 12 },
-                { id: 2, nama_kategori: 'Alat Bedah', produk_count: 8 },
-                { id: 3, nama_kategori: 'APD', produk_count: 15 },
-                { id: 4, nama_kategori: 'Alat Laboratorium', produk_count: 10 },
-                { id: 5, nama_kategori: 'Alat Bantu Jalan', produk_count: 6 },
-                { id: 6, nama_kategori: 'Disposable', produk_count: 20 }
-            ];
-            return false;
-        }
-    }
-
-    // ── Generate Category Links ──────────────────────────────────────
-    function getCategoryLinksHTML() {
-        if (!categories || categories.length === 0) {
-            return `
+  // ── Generate Category Links ──────────────────────────────────────
+  function getCategoryLinksHTML() {
+    if (!categories || categories.length === 0) {
+      return `
                 <li class="category-skeleton">
                     <i class="fas fa-spinner fa-spin"></i> Memuat kategori...
                 </li>
             `;
-        }
+    }
 
-        return categories.map(cat => `
+    return categories
+      .map(
+        (cat) => `
             <li>
                 <a href="katalog_produk.html?kategori=${cat.id}" class="footer-category-link">
                     <i class="fas fa-chevron-right"></i> 
                     ${escapeHtml(cat.nama_kategori)}
-                    ${cat.produk_count ? `<span class="category-count">(${cat.produk_count})</span>` : ''}
+                    ${cat.produk_count ? `<span class="category-count">(${cat.produk_count})</span>` : ""}
                 </a>
             </li>
-        `).join('');
-    }
+        `,
+      )
+      .join("");
+  }
 
-    // ── Generate Footer HTML ──────────────────────────────────────────
-    function generateFooterHTML() {
-        const categoryLinks = getCategoryLinksHTML();
+  // ── Generate Footer HTML ──────────────────────────────────────────
+  function generateFooterHTML() {
+    const categoryLinks = getCategoryLinksHTML();
 
-        return `
+    return `
         <style>
             .psf-footer {
                 background: linear-gradient(135deg, #0D47A1, #1A237E);
@@ -333,7 +339,7 @@
                 <!-- Brand Section -->
                 <div class="psf-footer-brand">
                     <h3>PSF Medika</h3>
-                    <p>Distributor alat kesehatan profesional terpercaya di Indonesia. Melayani kebutuhan rumah sakit, klinik, laboratorium, dan praktik mandiri.</p>
+                    <p>Distributor alat kesehatan profesional terpercaya di Indonesia. Melayani kebutuhan rumah sakit, klinik, laboratorium, praktik mandiri dan kebutuhan pribadi.</p>
                     <div class="psf-footer-social">
                         <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -356,11 +362,7 @@
 
                 <!-- Kategori Populer -->
                 <div class="psf-footer-section">
-                    <h4>Kategori Populer 
-                        <span style="font-size:0.6rem; color:rgba(255,255,255,0.4); font-weight:400; text-transform:none; letter-spacing:0;">
-                            <i class="fas fa-fire" style="color:#FF6B6B;"></i> Terlaris
-                        </span>
-                    </h4>
+                    <h4>Kategori Populer</h4>
                     <ul id="footerCategories">
                         ${categoryLinks}
                     </ul>
@@ -372,15 +374,18 @@
                     <ul class="psf-footer-contact">
                         <li>
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>Jl. Kesehatan No. 123, Jakarta Selatan<br>Indonesia</span>
+                            <span>Central Business District, Sentrakota<br />
+                            No. B16, RT.001 / RW.003, Jatibening Baru<br />
+                            Kecamatan Pondokgede, Kota Bekasi<br />
+                            Jawa Barat 17412</span>
                         </li>
                         <li>
                             <i class="fas fa-phone"></i>
-                            <span>+62 21 1234 5678</span>
+                            <span>+62 821-1537-138</span>
                         </li>
                         <li>
                             <i class="fas fa-envelope"></i>
-                            <span>info@psfmedika.com</span>
+                            <span>cs@psfmedika.com</span>
                         </li>
                         <li>
                             <i class="fas fa-clock"></i>
@@ -404,63 +409,66 @@
             </div>
         </footer>
     `;
-    }
+  }
 
-    // ── Update Categories in Footer ──────────────────────────────────
-    function updateCategoriesInFooter() {
-        const container = document.getElementById('footerCategories');
-        if (!container) return;
+  // ── Update Categories in Footer ──────────────────────────────────
+  function updateCategoriesInFooter() {
+    const container = document.getElementById("footerCategories");
+    if (!container) return;
 
-        if (!categories || categories.length === 0) {
-            container.innerHTML = `
+    if (!categories || categories.length === 0) {
+      container.innerHTML = `
                 <li class="category-skeleton">
                     <i class="fas fa-spinner fa-spin"></i> Memuat kategori...
                 </li>
             `;
-            return;
-        }
+      return;
+    }
 
-        // Tentukan kategori dengan produk terbanyak untuk badge "🔥 Populer"
-        const maxProducts = categories.length > 0 ? categories[0].produk_count || 0 : 0;
+    // Tentukan kategori dengan produk terbanyak untuk badge "🔥 Populer"
+    const maxProducts =
+      categories.length > 0 ? categories[0].produk_count || 0 : 0;
 
-        container.innerHTML = categories.map((cat, index) => {
-            const isPopular = index === 0 && cat.produk_count > 0;
-            return `
+    container.innerHTML = categories
+      .map((cat, index) => {
+        const isPopular = index === 0 && cat.produk_count > 0;
+        return `
                 <li>
                     <a href="katalog_produk.html?kategori=${cat.id}" class="footer-category-link">
                         <i class="fas fa-chevron-right"></i> 
                         ${escapeHtml(cat.nama_kategori)}
-                        ${cat.produk_count ? `<span class="category-count">(${cat.produk_count})</span>` : ''}
-                        ${isPopular ? `<span class="category-popular-badge">🔥 Populer</span>` : ''}
+                        ${cat.produk_count ? `<span class="category-count">(${cat.produk_count})</span>` : ""}
+                        ${isPopular ? `<span class="category-popular-badge">🔥 Populer</span>` : ""}
                     </a>
                 </li>
             `;
-        }).join('');
+      })
+      .join("");
+  }
+
+  // ── Main Init Function ────────────────────────────────────────────
+  async function initFooter() {
+    // 1. Inject footer HTML
+    const target = document.getElementById("footer");
+    if (!target) {
+      console.error("Element #footer not found");
+      return;
     }
 
-    // ── Main Init Function ────────────────────────────────────────────
-    async function initFooter() {
-        // 1. Inject footer HTML
-        const target = document.getElementById('footer');
-        if (!target) {
-            console.error('Element #footer not found');
-            return;
-        }
+    // Inject dengan skeleton loading
+    target.innerHTML = generateFooterHTML();
 
-        // Inject dengan skeleton loading
-        target.innerHTML = generateFooterHTML();
+    // 2. Fetch categories
+    await fetchCategories();
 
-        // 2. Fetch categories
-        await fetchCategories();
+    // 3. Update kategori di footer
+    updateCategoriesInFooter();
+  }
 
-        // 3. Update kategori di footer
-        updateCategoriesInFooter();
-    }
-
-    // ── Run when DOM ready ────────────────────────────────────────────
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initFooter);
-    } else {
-        initFooter();
-    }
+  // ── Run when DOM ready ────────────────────────────────────────────
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFooter);
+  } else {
+    initFooter();
+  }
 })();
