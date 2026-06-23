@@ -56,6 +56,12 @@
                 color: white;
                 font-size: 18px;
             }
+            .psf-brand-logo {
+                width: 38px;
+                height: 38px;
+                object-fit: contain;
+                border-radius: 10px;
+            }
             .psf-brand-text { line-height: 1.1; }
             .psf-brand-name {
                 font-size: 1.1rem;
@@ -142,7 +148,7 @@
             <div class="psf-navbar-inner">
                 <a href="index.html" class="psf-brand">
                     <div class="psf-brand-icon">
-                        <i class="fas fa-hospital-user"></i>
+                        <img src="/images/logo-psfmedika.png" alt="PSF Medika" class="psf-brand-logo">
                     </div>
                     <div class="psf-brand-text">
                         <span class="psf-brand-name">PSF Medika</span>
