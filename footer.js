@@ -116,14 +116,41 @@
             }
 
             /* Brand Section */
-            .psf-footer-brand h3 {
+            /* Tambahkan style untuk logo */
+            .psf-footer-logo-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                margin-bottom: 0.75rem;
+            }
+            .psf-footer-logo-icon {
+                width: 50px;
+                height: 50px;
+                background: linear-gradient(135deg, #1565C0, #4A9FE8);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 24px;
+                flex-shrink: 0;
+                box-shadow: 0 4px 12px rgba(21, 101, 192, 0.3);
+            }
+            .psf-footer-brand-title {
                 font-size: 1.5rem;
                 font-weight: 800;
-                margin-bottom: 0.5rem;
+                margin: 0;
+                line-height: 1.2;
                 background: linear-gradient(135deg, #64B5F6, #E3F2FD);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
+            }
+            .psf-footer-brand-sub {
+                font-size: 0.7rem;
+                color: rgba(255,255,255,0.5);
+                display: block;
+                margin-top: 0;
             }
             .psf-footer-brand p {
                 color: rgba(255,255,255,0.8);
@@ -306,8 +333,16 @@
                     padding: 2rem 0 1rem;
                     margin-top: 2rem;
                 }
-                .psf-footer-brand h3 {
+                .psf-footer-brand-title {
                     font-size: 1.25rem;
+                }
+                .psf-footer-logo-icon {
+                    width: 40px;
+                    height: 40px;
+                    font-size: 18px;
+                }
+                .psf-footer-logo-wrapper {
+                    gap: 10px;
                 }
                 .psf-footer-bottom {
                     flex-direction: column;
@@ -336,9 +371,17 @@
 
         <footer class="psf-footer">
             <div class="psf-footer-inner">
-                <!-- Brand Section -->
+                <!-- Brand Section dengan Logo -->
                 <div class="psf-footer-brand">
-                    <h3>PSF Medika</h3>
+                    <div class="psf-footer-logo-wrapper">
+                        <div class="psf-footer-logo-icon">
+                            <img src="/images/logo-psfmedika.png" alt="PSF Medika" class="psf-footer-logo-img">
+                        </div>
+                        <div>
+                            <div class="psf-footer-brand-title">PSF Medika</div>
+                            <span class="psf-footer-brand-sub">Alat Kesehatan Profesional</span>
+                        </div>
+                    </div>
                     <p>Distributor alat kesehatan profesional terpercaya di Indonesia. Melayani kebutuhan rumah sakit, klinik, laboratorium, praktik mandiri dan kebutuhan pribadi.</p>
                     <div class="psf-footer-social">
                         <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
