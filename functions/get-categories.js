@@ -24,15 +24,35 @@ export async function onRequestGet(context) {
   try {
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+    // Ambil semua kategori dengan count produk
     const { data, error } = await supabase
       .from("kategori")
-      .select("id, nama_kategori")
+      .select(`
+        id,
+        nama_kategori,
+        produk:produk(count)
+      `)
       .order("nama_kategori", { ascending: true });
 
     if (error) throw error;
 
+    // Format data dan hitung jumlah produk
+    const categoriesWithCount = (data || []).map(cat => ({
+      id: cat.id,
+      nama_kategori: cat.nama_kategori,
+      produk_count: cat.produk?.[0]?.count || 0
+    }));
+
+    // Urutkan berdasarkan jumlah produk terbanyak
+    const sortedCategories = categoriesWithCount.sort(
+      (a, b) => b.produk_count - a.produk_count
+    );
+
     return new Response(
-      JSON.stringify({ categories: data || [], success: true }),
+      JSON.stringify({ 
+        categories: sortedCategories, 
+        success: true 
+      }),
       { status: 200, headers: corsHeaders }
     );
   } catch (error) {

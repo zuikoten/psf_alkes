@@ -300,6 +300,15 @@
         }
       }
 
+      // ── Read URL parameters ──────────────────────────────────────────────
+      function getUrlParams() {
+          const params = new URLSearchParams(window.location.search);
+          return {
+              kategori: params.get('kategori') || 'all',
+              search: params.get('search') || '',
+          };
+      }
+
       // ── Fetch products (server-side, paginated) ────────────────────────
       async function loadProducts(page = 1) {
         const grid = document.getElementById("productsGrid");
@@ -512,8 +521,18 @@
 
       // ── Init ───────────────────────────────────────────────────────────
       document.addEventListener("DOMContentLoaded", async () => {
-        await loadCategories();
-        await loadProducts(1);
+          await loadCategories();
+          
+          // Set filter dari URL
+          const urlParams = getUrlParams();
+          if (urlParams.kategori !== 'all') {
+              document.getElementById('categoryFilter').value = urlParams.kategori;
+          }
+          if (urlParams.search) {
+              document.getElementById('searchInput').value = urlParams.search;
+          }
+          
+          await loadProducts(1);
       });
     </script>
   </body>
